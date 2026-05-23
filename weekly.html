@@ -39,11 +39,168 @@ body {
   background: var(--card);
   border-radius: 10px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
-  overflow: hidden;
+  /* No overflow:hidden so sticky-positioned children can pin to viewport */
 }
 .brand-bar {
   height: 5px;
   background: linear-gradient(90deg, var(--coral) 0%, var(--coral-dark) 100%);
+  border-radius: 10px 10px 0 0;
+}
+/* Sticky topbar: always-visible thin nav with title + CAID + jump-to nav */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.94);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 44px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.topbar-title {
+  font-weight: 700;
+  color: var(--charcoal);
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+}
+.topbar-meta {
+  color: var(--muted);
+  font-size: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.topbar-meta code {
+  background: var(--bg);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  color: var(--charcoal);
+  border: 1px solid var(--border);
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.topbar-nav {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.topbar-nav a {
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 4px 9px;
+  border-radius: 4px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.topbar-nav a:hover {
+  background: var(--bg);
+  color: var(--charcoal);
+}
+.topbar-nav a.toc-active {
+  background: rgba(255, 91, 91, 0.10);
+  color: var(--coral);
+  font-weight: 600;
+}
+.topbar-history {
+  font-size: 12px;
+  color: var(--coral);
+  text-decoration: none;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  white-space: nowrap;
+  margin-left: 6px;
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+.topbar-history:hover {
+  border-color: var(--coral);
+  background: rgba(255, 91, 91, 0.05);
+}
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+/* Collapsible section (details/summary) styling */
+details.collapsible {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0;
+  margin: 12px 0 16px;
+  background: var(--card);
+}
+details.collapsible > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--charcoal-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+details.collapsible > summary::-webkit-details-marker { display: none; }
+details.collapsible > summary::after {
+  content: '+';
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--coral);
+  margin-left: 8px;
+}
+details.collapsible[open] > summary::after { content: '−'; }
+details.collapsible > div.collapsible-body {
+  padding: 0 14px 12px;
+}
+/* Sortable table column headers */
+table.table-sortable thead th {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 20px;
+}
+table.table-sortable thead th::after {
+  content: '⇅';
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 9px;
+  opacity: 0.45;
+}
+table.table-sortable thead th.sorted-asc::after { content: '↑'; opacity: 1; }
+table.table-sortable thead th.sorted-desc::after { content: '↓'; opacity: 1; }
+/* Print: hide topbar, disable smooth scroll */
+@media print {
+  .topbar { display: none; }
+  html { scroll-behavior: auto; scroll-padding-top: 0; }
+  details.collapsible > summary { cursor: default; }
+  details.collapsible > summary::after { display: none; }
+  details.collapsible { border: none; }
+  details.collapsible > div.collapsible-body { padding: 0; }
+  details.collapsible[open] > summary { padding-bottom: 4px; }
 }
 .report-body { padding: 36px 44px 44px; }
 .report-header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 24px; }
@@ -258,13 +415,25 @@ table.table-dense tbody td.num { font-size: 12px; }
 <body>
 <div class="report">
 <div class="brand-bar"></div>
+<div class="topbar no-print">
+  <div class="topbar-inner">
+    <div class="topbar-left">
+      <span class="topbar-title">Weekly Report</span>
+      <span class="topbar-meta"><span>CAID <code>937700006246</code></span><span>· 2026-05-23</span></span>
+    </div>
+    <div class="topbar-right">
+      <nav class="topbar-nav"><a href="#headline">Headline</a><a href="#top-bin-decision-tree-status">BIN status</a><a href="#dispute-signals">Disputes</a><a href="#auth-velocity-covariate">Velocity</a><a href="#vs-baseline-appendix-a-5">Baseline</a><a href="#control-arm-comparison-test-vs-control">Control arm</a><a href="#decision-this-week">Decision</a><a href="#watch-list-for-next-week">Watch list</a></nav>
+      <a class="topbar-history" href="https://github.com/christ-flex/MIDical-Lab/commits/main/weekly.html" target="_blank" rel="noopener" title="View commit history for this report on GitHub">← History</a>
+    </div>
+  </div>
+</div>
 <div class="report-body">
 <div class="report-header">
 <div class="eyebrow">Weekly experiment monitor</div>
 <h1>MIDical Lab — Weekly Report</h1>
 <div class="meta"><div class="meta-item"><span class="label">CAID:</span><code>937700006246</code></div><div class="meta-item"><span class="label">Run date:</span>2026-05-23</div><div class="meta-item"><span class="label">Source CSVs:</span><code>MIDical Lab/output/2026-05-20/</code></div></div>
 </div>
-<h2>Headline</h2>
+<h2 id="headline">Headline</h2>
 <div class="headline-card">Approval <strong>9.33%</strong> this week (4,672 auths) vs 9.03% prior week (<span class="delta-positive">+0.30 pp</span> WoW). Peak over the window was <strong>10.79%</strong> in week-of 2026-04-27. Pull decision: <span class="pill pill-continue">CONTINUE</span> (2 of 15 top BINs degrading, 13.3%).</div>
 <div class="kpi-row">
 <div class="kpi-card"><div class="kpi-label">Approval this week</div><div class="kpi-value">9.33%</div><div class="kpi-sub">4,672 auths</div></div>
@@ -272,7 +441,7 @@ table.table-dense tbody td.num { font-size: 12px; }
 <div class="kpi-card"><div class="kpi-label">Peak (window)</div><div class="kpi-value">10.79%</div><div class="kpi-sub">wk of 2026-04-27</div></div>
 <div class="kpi-card"><div class="kpi-label">Decision</div><div class="kpi-value positive">Continue</div><div class="kpi-sub">2/15 degrading (13.3%)</div></div>
 </div>
-<h2>Approval trend (last 8 weeks)</h2>
+<h2 id="approval-trend-last-8-weeks">Approval trend (last 8 weeks)</h2>
 <table>
 <thead><tr><th>Week start</th><th class="num">Auths</th><th class="num">Approvals</th><th class="num">Approval rate</th><th class="num">WoW (pp)</th></tr></thead>
 <tbody>
@@ -287,8 +456,8 @@ table.table-dense tbody td.num { font-size: 12px; }
 </tbody>
 </table>
 
-<div class="chart-wrap"><svg viewBox="0 0 720 248" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Approval rate — last 8 weeks"><rect x="0" y="0" width="720" height="248" fill="#FFFFFF"/><text x="46" y="14" font-size="11" font-weight="600" fill="#3C3C42">Approval rate — last 8 weeks</text><line x1="46" y1="210.0" x2="600" y2="210.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="164.0" x2="600" y2="164.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="118.0" x2="600" y2="118.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="72.0" x2="600" y2="72.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="26.0" x2="600" y2="26.0" stroke="#E5E5EA" stroke-width="1"/><text x="40" y="213.0" font-size="10" fill="#6B7280" text-anchor="end">7.6%</text><text x="40" y="167.0" font-size="10" fill="#6B7280" text-anchor="end">8.4%</text><text x="40" y="121.0" font-size="10" fill="#6B7280" text-anchor="end">9.3%</text><text x="40" y="75.0" font-size="10" fill="#6B7280" text-anchor="end">10.2%</text><text x="40" y="29.0" font-size="10" fill="#6B7280" text-anchor="end">11.1%</text><path d="M46.0,139.1 L125.1,169.3 L204.3,202.0 L283.4,109.0 L362.6,42.0 L441.7,77.8 L520.9,133.4 L600.0,117.8" fill="none" stroke="#FF5B5B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="46.0" cy="139.1" r="2.5" fill="#FF5B5B" /><circle cx="125.1" cy="169.3" r="2.5" fill="#FF5B5B" /><circle cx="204.3" cy="202.0" r="2.5" fill="#FF5B5B" /><circle cx="283.4" cy="109.0" r="2.5" fill="#FF5B5B" /><circle cx="362.6" cy="42.0" r="2.5" fill="#FF5B5B" /><circle cx="441.7" cy="77.8" r="2.5" fill="#FF5B5B" /><circle cx="520.9" cy="133.4" r="2.5" fill="#FF5B5B" /><circle cx="600.0" cy="117.8" r="2.5" fill="#FF5B5B" /><text x="46.0" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-03-30</text><text x="125.1" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-04-06</text><text x="204.3" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-04-13</text><text x="283.4" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-04-20</text><text x="362.6" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-04-27</text><text x="441.7" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-05-04</text><text x="520.9" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-05-11</text><text x="600.0" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-05-18</text><g transform="translate(612,32)"><line x1="0" y1="0" x2="14" y2="0" stroke="#FF5B5B" stroke-width="2"/><text x="18" y="3" font-size="10" fill="#3C3C42">Approval rate</text></g></svg></div>
-<h2>Decline-mix trajectory</h2>
+<div class="chart-wrap"><svg viewBox="0 0 720 248" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Approval rate — last 8 weeks"><rect x="0" y="0" width="720" height="248" fill="#FFFFFF"/><text x="46" y="14" font-size="11" font-weight="600" fill="#3C3C42">Approval rate — last 8 weeks</text><line x1="46" y1="210.0" x2="600" y2="210.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="164.0" x2="600" y2="164.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="118.0" x2="600" y2="118.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="72.0" x2="600" y2="72.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="26.0" x2="600" y2="26.0" stroke="#E5E5EA" stroke-width="1"/><text x="40" y="213.0" font-size="10" fill="#6B7280" text-anchor="end">7.6%</text><text x="40" y="167.0" font-size="10" fill="#6B7280" text-anchor="end">8.4%</text><text x="40" y="121.0" font-size="10" fill="#6B7280" text-anchor="end">9.3%</text><text x="40" y="75.0" font-size="10" fill="#6B7280" text-anchor="end">10.2%</text><text x="40" y="29.0" font-size="10" fill="#6B7280" text-anchor="end">11.1%</text><path d="M46.0,139.1 L125.1,169.3 L204.3,202.0 L283.4,109.0 L362.6,42.0 L441.7,77.8 L520.9,133.4 L600.0,117.8" fill="none" stroke="#FF5B5B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="46.0" cy="139.1" r="3" fill="#FF5B5B" stroke="#FFFFFF" stroke-width="1"><title>Approval rate: 8.92% on 2026-03-30</title></circle><circle cx="125.1" cy="169.3" r="3" fill="#FF5B5B" stroke="#FFFFFF" stroke-width="1"><title>Approval rate: 8.34% on 2026-04-06</title></circle><circle cx="204.3" cy="202.0" r="3" fill="#FF5B5B" stroke="#FFFFFF" stroke-width="1"><title>Approval rate: 7.71% on 2026-04-13</title></circle><circle cx="283.4" cy="109.0" r="3" fill="#FF5B5B" stroke="#FFFFFF" stroke-width="1"><title>Approval rate: 9.50% on 2026-04-20</title></circle><circle cx="362.6" cy="42.0" r="3" fill="#FF5B5B" stroke="#FFFFFF" stroke-width="1"><title>Approval rate: 10.79% on 2026-04-27</title></circle><circle cx="441.7" cy="77.8" r="3" fill="#FF5B5B" stroke="#FFFFFF" stroke-width="1"><title>Approval rate: 10.10% on 2026-05-04</title></circle><circle cx="520.9" cy="133.4" r="3" fill="#FF5B5B" stroke="#FFFFFF" stroke-width="1"><title>Approval rate: 9.03% on 2026-05-11</title></circle><circle cx="600.0" cy="117.8" r="3" fill="#FF5B5B" stroke="#FFFFFF" stroke-width="1"><title>Approval rate: 9.33% on 2026-05-18</title></circle><text x="46.0" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-03-30</text><text x="125.1" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-04-06</text><text x="204.3" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-04-13</text><text x="283.4" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-04-20</text><text x="362.6" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-04-27</text><text x="441.7" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-05-04</text><text x="520.9" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-05-11</text><text x="600.0" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-05-18</text><g transform="translate(612,32)"><line x1="0" y1="0" x2="14" y2="0" stroke="#FF5B5B" stroke-width="2"/><text x="18" y="3" font-size="10" fill="#3C3C42">Approval rate</text></g></svg></div>
+<h2 id="decline-mix-trajectory">Decline-mix trajectory</h2>
 <p class="section-intro">Share of total declines per week, top 5 reasons.</p>
 <table>
 <thead><tr><th>Reason</th><th class="num">2026-04-13</th><th class="num">2026-04-20</th><th class="num">2026-04-27</th><th class="num">2026-05-04</th><th class="num">2026-05-11</th><th class="num">2026-05-18</th></tr></thead>
@@ -301,13 +470,13 @@ table.table-dense tbody td.num { font-size: 12px; }
 </tbody>
 </table>
 
-<div class="chart-wrap"><svg viewBox="0 0 720 248" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Decline-reason share of total declines — by week"><rect x="0" y="0" width="720" height="248" fill="#FFFFFF"/><text x="46" y="14" font-size="11" font-weight="600" fill="#3C3C42">Decline-reason share of total declines — by week</text><line x1="46" y1="210.0" x2="600" y2="210.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="164.0" x2="600" y2="164.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="118.0" x2="600" y2="118.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="72.0" x2="600" y2="72.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="26.0" x2="600" y2="26.0" stroke="#E5E5EA" stroke-width="1"/><text x="40" y="213.0" font-size="10" fill="#6B7280" text-anchor="end">2.1%</text><text x="40" y="167.0" font-size="10" fill="#6B7280" text-anchor="end">11.8%</text><text x="40" y="121.0" font-size="10" fill="#6B7280" text-anchor="end">21.5%</text><text x="40" y="75.0" font-size="10" fill="#6B7280" text-anchor="end">31.2%</text><text x="40" y="29.0" font-size="10" fill="#6B7280" text-anchor="end">40.9%</text><path d="M46.0,42.0 L156.8,48.2 L267.6,46.3 L378.4,55.3 L489.2,54.8 L600.0,63.8" fill="none" stroke="#FF5B5B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M46.0,120.8 L156.8,118.4 L267.6,104.2 L378.4,105.6 L489.2,104.7 L600.0,105.6" fill="none" stroke="#3C3C42" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M46.0,103.2 L156.8,111.3 L267.6,118.0 L378.4,113.7 L489.2,111.8 L600.0,105.6" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M46.0,189.7 L156.8,189.2 L267.6,192.0 L378.4,189.7 L489.2,193.0 L600.0,188.7" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M46.0,202.0 L156.8,187.3 L267.6,198.2 L378.4,196.3 L489.2,191.1 L600.0,190.6" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="46.0" cy="42.0" r="2.5" fill="#FF5B5B" /><circle cx="156.8" cy="48.2" r="2.5" fill="#FF5B5B" /><circle cx="267.6" cy="46.3" r="2.5" fill="#FF5B5B" /><circle cx="378.4" cy="55.3" r="2.5" fill="#FF5B5B" /><circle cx="489.2" cy="54.8" r="2.5" fill="#FF5B5B" /><circle cx="600.0" cy="63.8" r="2.5" fill="#FF5B5B" /><circle cx="46.0" cy="120.8" r="2.5" fill="#3C3C42" /><circle cx="156.8" cy="118.4" r="2.5" fill="#3C3C42" /><circle cx="267.6" cy="104.2" r="2.5" fill="#3C3C42" /><circle cx="378.4" cy="105.6" r="2.5" fill="#3C3C42" /><circle cx="489.2" cy="104.7" r="2.5" fill="#3C3C42" /><circle cx="600.0" cy="105.6" r="2.5" fill="#3C3C42" /><circle cx="46.0" cy="103.2" r="2.5" fill="#16A34A" /><circle cx="156.8" cy="111.3" r="2.5" fill="#16A34A" /><circle cx="267.6" cy="118.0" r="2.5" fill="#16A34A" /><circle cx="378.4" cy="113.7" r="2.5" fill="#16A34A" /><circle cx="489.2" cy="111.8" r="2.5" fill="#16A34A" /><circle cx="600.0" cy="105.6" r="2.5" fill="#16A34A" /><circle cx="46.0" cy="189.7" r="2.5" fill="#F59E0B" /><circle cx="156.8" cy="189.2" r="2.5" fill="#F59E0B" /><circle cx="267.6" cy="192.0" r="2.5" fill="#F59E0B" /><circle cx="378.4" cy="189.7" r="2.5" fill="#F59E0B" /><circle cx="489.2" cy="193.0" r="2.5" fill="#F59E0B" /><circle cx="600.0" cy="188.7" r="2.5" fill="#F59E0B" /><circle cx="46.0" cy="202.0" r="2.5" fill="#6366F1" /><circle cx="156.8" cy="187.3" r="2.5" fill="#6366F1" /><circle cx="267.6" cy="198.2" r="2.5" fill="#6366F1" /><circle cx="378.4" cy="196.3" r="2.5" fill="#6366F1" /><circle cx="489.2" cy="191.1" r="2.5" fill="#6366F1" /><circle cx="600.0" cy="190.6" r="2.5" fill="#6366F1" /><text x="46.0" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-04-13</text><text x="156.8" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-04-20</text><text x="267.6" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-04-27</text><text x="378.4" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-05-04</text><text x="489.2" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-05-11</text><text x="600.0" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-05-18</text><g transform="translate(612,32)"><line x1="0" y1="0" x2="14" y2="0" stroke="#FF5B5B" stroke-width="2"/><text x="18" y="3" font-size="10" fill="#3C3C42">FraudSuspectedFraud</text></g><g transform="translate(612,48)"><line x1="0" y1="0" x2="14" y2="0" stroke="#3C3C42" stroke-width="2"/><text x="18" y="3" font-size="10" fill="#3C3C42">InsufficientFunds</text></g><g transform="translate(612,64)"><line x1="0" y1="0" x2="14" y2="0" stroke="#16A34A" stroke-width="2"/><text x="18" y="3" font-size="10" fill="#3C3C42">DoNotHonor</text></g><g transform="translate(612,80)"><line x1="0" y1="0" x2="14" y2="0" stroke="#F59E0B" stroke-width="2"/><text x="18" y="3" font-size="10" fill="#3C3C42">ClosedAccountExpired</text></g><g transform="translate(612,96)"><line x1="0" y1="0" x2="14" y2="0" stroke="#6366F1" stroke-width="2"/><text x="18" y="3" font-size="10" fill="#3C3C42">ProviderFailures</text></g></svg></div>
-<h2>Top-BIN decision tree status</h2>
+<div class="chart-wrap"><svg viewBox="0 0 720 248" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Decline-reason share of total declines — by week"><rect x="0" y="0" width="720" height="248" fill="#FFFFFF"/><text x="46" y="14" font-size="11" font-weight="600" fill="#3C3C42">Decline-reason share of total declines — by week</text><line x1="46" y1="210.0" x2="600" y2="210.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="164.0" x2="600" y2="164.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="118.0" x2="600" y2="118.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="72.0" x2="600" y2="72.0" stroke="#E5E5EA" stroke-width="1"/><line x1="46" y1="26.0" x2="600" y2="26.0" stroke="#E5E5EA" stroke-width="1"/><text x="40" y="213.0" font-size="10" fill="#6B7280" text-anchor="end">2.1%</text><text x="40" y="167.0" font-size="10" fill="#6B7280" text-anchor="end">11.8%</text><text x="40" y="121.0" font-size="10" fill="#6B7280" text-anchor="end">21.5%</text><text x="40" y="75.0" font-size="10" fill="#6B7280" text-anchor="end">31.2%</text><text x="40" y="29.0" font-size="10" fill="#6B7280" text-anchor="end">40.9%</text><path d="M46.0,42.0 L156.8,48.2 L267.6,46.3 L378.4,55.3 L489.2,54.8 L600.0,63.8" fill="none" stroke="#FF5B5B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M46.0,120.8 L156.8,118.4 L267.6,104.2 L378.4,105.6 L489.2,104.7 L600.0,105.6" fill="none" stroke="#3C3C42" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M46.0,103.2 L156.8,111.3 L267.6,118.0 L378.4,113.7 L489.2,111.8 L600.0,105.6" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M46.0,189.7 L156.8,189.2 L267.6,192.0 L378.4,189.7 L489.2,193.0 L600.0,188.7" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M46.0,202.0 L156.8,187.3 L267.6,198.2 L378.4,196.3 L489.2,191.1 L600.0,190.6" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="46.0" cy="42.0" r="3" fill="#FF5B5B" stroke="#FFFFFF" stroke-width="1"><title>FraudSuspectedFraud: 37.50% on 2026-04-13</title></circle><circle cx="156.8" cy="48.2" r="3" fill="#FF5B5B" stroke="#FFFFFF" stroke-width="1"><title>FraudSuspectedFraud: 36.20% on 2026-04-20</title></circle><circle cx="267.6" cy="46.3" r="3" fill="#FF5B5B" stroke="#FFFFFF" stroke-width="1"><title>FraudSuspectedFraud: 36.60% on 2026-04-27</title></circle><circle cx="378.4" cy="55.3" r="3" fill="#FF5B5B" stroke="#FFFFFF" stroke-width="1"><title>FraudSuspectedFraud: 34.70% on 2026-05-04</title></circle><circle cx="489.2" cy="54.8" r="3" fill="#FF5B5B" stroke="#FFFFFF" stroke-width="1"><title>FraudSuspectedFraud: 34.80% on 2026-05-11</title></circle><circle cx="600.0" cy="63.8" r="3" fill="#FF5B5B" stroke="#FFFFFF" stroke-width="1"><title>FraudSuspectedFraud: 32.90% on 2026-05-18</title></circle><circle cx="46.0" cy="120.8" r="3" fill="#3C3C42" stroke="#FFFFFF" stroke-width="1"><title>InsufficientFunds: 20.90% on 2026-04-13</title></circle><circle cx="156.8" cy="118.4" r="3" fill="#3C3C42" stroke="#FFFFFF" stroke-width="1"><title>InsufficientFunds: 21.40% on 2026-04-20</title></circle><circle cx="267.6" cy="104.2" r="3" fill="#3C3C42" stroke="#FFFFFF" stroke-width="1"><title>InsufficientFunds: 24.40% on 2026-04-27</title></circle><circle cx="378.4" cy="105.6" r="3" fill="#3C3C42" stroke="#FFFFFF" stroke-width="1"><title>InsufficientFunds: 24.10% on 2026-05-04</title></circle><circle cx="489.2" cy="104.7" r="3" fill="#3C3C42" stroke="#FFFFFF" stroke-width="1"><title>InsufficientFunds: 24.30% on 2026-05-11</title></circle><circle cx="600.0" cy="105.6" r="3" fill="#3C3C42" stroke="#FFFFFF" stroke-width="1"><title>InsufficientFunds: 24.10% on 2026-05-18</title></circle><circle cx="46.0" cy="103.2" r="3" fill="#16A34A" stroke="#FFFFFF" stroke-width="1"><title>DoNotHonor: 24.60% on 2026-04-13</title></circle><circle cx="156.8" cy="111.3" r="3" fill="#16A34A" stroke="#FFFFFF" stroke-width="1"><title>DoNotHonor: 22.90% on 2026-04-20</title></circle><circle cx="267.6" cy="118.0" r="3" fill="#16A34A" stroke="#FFFFFF" stroke-width="1"><title>DoNotHonor: 21.50% on 2026-04-27</title></circle><circle cx="378.4" cy="113.7" r="3" fill="#16A34A" stroke="#FFFFFF" stroke-width="1"><title>DoNotHonor: 22.40% on 2026-05-04</title></circle><circle cx="489.2" cy="111.8" r="3" fill="#16A34A" stroke="#FFFFFF" stroke-width="1"><title>DoNotHonor: 22.80% on 2026-05-11</title></circle><circle cx="600.0" cy="105.6" r="3" fill="#16A34A" stroke="#FFFFFF" stroke-width="1"><title>DoNotHonor: 24.10% on 2026-05-18</title></circle><circle cx="46.0" cy="189.7" r="3" fill="#F59E0B" stroke="#FFFFFF" stroke-width="1"><title>ClosedAccountExpired: 6.40% on 2026-04-13</title></circle><circle cx="156.8" cy="189.2" r="3" fill="#F59E0B" stroke="#FFFFFF" stroke-width="1"><title>ClosedAccountExpired: 6.50% on 2026-04-20</title></circle><circle cx="267.6" cy="192.0" r="3" fill="#F59E0B" stroke="#FFFFFF" stroke-width="1"><title>ClosedAccountExpired: 5.90% on 2026-04-27</title></circle><circle cx="378.4" cy="189.7" r="3" fill="#F59E0B" stroke="#FFFFFF" stroke-width="1"><title>ClosedAccountExpired: 6.40% on 2026-05-04</title></circle><circle cx="489.2" cy="193.0" r="3" fill="#F59E0B" stroke="#FFFFFF" stroke-width="1"><title>ClosedAccountExpired: 5.70% on 2026-05-11</title></circle><circle cx="600.0" cy="188.7" r="3" fill="#F59E0B" stroke="#FFFFFF" stroke-width="1"><title>ClosedAccountExpired: 6.60% on 2026-05-18</title></circle><circle cx="46.0" cy="202.0" r="3" fill="#6366F1" stroke="#FFFFFF" stroke-width="1"><title>ProviderFailures: 3.80% on 2026-04-13</title></circle><circle cx="156.8" cy="187.3" r="3" fill="#6366F1" stroke="#FFFFFF" stroke-width="1"><title>ProviderFailures: 6.90% on 2026-04-20</title></circle><circle cx="267.6" cy="198.2" r="3" fill="#6366F1" stroke="#FFFFFF" stroke-width="1"><title>ProviderFailures: 4.60% on 2026-04-27</title></circle><circle cx="378.4" cy="196.3" r="3" fill="#6366F1" stroke="#FFFFFF" stroke-width="1"><title>ProviderFailures: 5.00% on 2026-05-04</title></circle><circle cx="489.2" cy="191.1" r="3" fill="#6366F1" stroke="#FFFFFF" stroke-width="1"><title>ProviderFailures: 6.10% on 2026-05-11</title></circle><circle cx="600.0" cy="190.6" r="3" fill="#6366F1" stroke="#FFFFFF" stroke-width="1"><title>ProviderFailures: 6.20% on 2026-05-18</title></circle><text x="46.0" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-04-13</text><text x="156.8" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-04-20</text><text x="267.6" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-04-27</text><text x="378.4" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-05-04</text><text x="489.2" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-05-11</text><text x="600.0" y="226" font-size="10" fill="#6B7280" text-anchor="middle">2026-05-18</text><g transform="translate(612,32)"><line x1="0" y1="0" x2="14" y2="0" stroke="#FF5B5B" stroke-width="2"/><text x="18" y="3" font-size="10" fill="#3C3C42">FraudSuspectedFraud</text></g><g transform="translate(612,48)"><line x1="0" y1="0" x2="14" y2="0" stroke="#3C3C42" stroke-width="2"/><text x="18" y="3" font-size="10" fill="#3C3C42">InsufficientFunds</text></g><g transform="translate(612,64)"><line x1="0" y1="0" x2="14" y2="0" stroke="#16A34A" stroke-width="2"/><text x="18" y="3" font-size="10" fill="#3C3C42">DoNotHonor</text></g><g transform="translate(612,80)"><line x1="0" y1="0" x2="14" y2="0" stroke="#F59E0B" stroke-width="2"/><text x="18" y="3" font-size="10" fill="#3C3C42">ClosedAccountExpired</text></g><g transform="translate(612,96)"><line x1="0" y1="0" x2="14" y2="0" stroke="#6366F1" stroke-width="2"/><text x="18" y="3" font-size="10" fill="#3C3C42">ProviderFailures</text></g></svg></div>
+<h2 id="top-bin-decision-tree-status">Top-BIN decision tree status</h2>
 <p class="section-intro"><strong>2</strong> degrading, <strong>4</strong> watch, <strong>9</strong> healthy out of 15 top BINs (each ≥1% of this cohort's capture volume).</p>
 <div class="note"><strong>Signal glossary.</strong> <em>Approval drop this/prior wk</em> = approval rate fell ≥1.5pp WoW this week (or last). <em>Decline-mix shift</em> = one decline reason's share of total declines moved ≥5pp WoW. <em>New disputes arriving</em> = dispute signals (TC15/MC CB/TC40/RDR/Ethoca) attributed to this BIN. <em>Attempt volume rising</em> = auth attempts to this BIN rose ≥20% WoW. A BIN is DEGRADING when the approval-drop signal repeats two weeks in a row OR fires alongside any other signal; WATCH means a single signal has fired and needs another week of data to promote or clear.</div>
 <h3>Degrading BINs (2 BINs)</h3>
 <div class="table-scroll">
-<table class="table-dense">
+<table class="table-dense table-sortable">
 <thead><tr><th>BIN6</th><th>Issuer</th><th class="num">Share</th><th class="num">2026-04-27</th><th class="num">2026-05-04</th><th class="num">2026-05-11</th><th class="num">2026-05-18</th><th class="num">WoW slope</th><th>Trend</th><th>Signals</th></tr></thead>
 <tbody>
 <tr><td>403163</td><td>SUTTON BANK</td><td class="num">6.8%</td><td class="num">20.00%</td><td class="num">16.63%</td><td class="num">15.07%</td><td class="num">10.53%</td><td class="num"><span class="delta-negative">-4.54 pp</span></td><td><span class="sparkline-cell"><svg viewBox="0 0 120 28" width="120" height="28" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle"><path d="M2.0,2.0 L40.7,10.5 L79.3,14.5 L118.0,26.0" fill="none" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="118.0" cy="26.0" r="2" fill="#DC2626"/></svg></span></td><td>Approval drop this wk; Approval drop prior wk</td></tr>
@@ -318,7 +487,7 @@ table.table-dense tbody td.num { font-size: 12px; }
 
 <h3>Watch BINs (4 BINs)</h3>
 <div class="table-scroll">
-<table class="table-dense">
+<table class="table-dense table-sortable">
 <thead><tr><th>BIN6</th><th>Issuer</th><th class="num">Share</th><th class="num">2026-04-27</th><th class="num">2026-05-04</th><th class="num">2026-05-11</th><th class="num">2026-05-18</th><th class="num">WoW slope</th><th>Trend</th><th>Signals</th></tr></thead>
 <tbody>
 <tr><td>414740</td><td>JPMORGAN CHASE BANK N.A.</td><td class="num">1.4%</td><td class="num">14.62%</td><td class="num">9.76%</td><td class="num">16.18%</td><td class="num">10.61%</td><td class="num"><span class="delta-negative">-5.57 pp</span></td><td><span class="sparkline-cell"><svg viewBox="0 0 120 28" width="120" height="28" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle"><path d="M2.0,7.8 L40.7,26.0 L79.3,2.0 L118.0,22.8" fill="none" stroke="#B45309" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="118.0" cy="22.8" r="2" fill="#B45309"/></svg></span></td><td>Approval drop this wk; New disputes arriving</td></tr>
@@ -329,9 +498,8 @@ table.table-dense tbody td.num { font-size: 12px; }
 </table>
 </div>
 
-<h3>Healthy BINs (9 BINs)</h3>
-<div class="table-scroll">
-<table class="table-dense">
+<details class="collapsible"><summary>Healthy BINs (9 BINs) — click to expand / collapse</summary><div class="collapsible-body"><div class="table-scroll">
+<table class="table-dense table-sortable">
 <thead><tr><th>BIN6</th><th>Issuer</th><th class="num">Share</th><th class="num">2026-04-27</th><th class="num">2026-05-04</th><th class="num">2026-05-11</th><th class="num">2026-05-18</th><th class="num">WoW slope</th><th>Trend</th><th>Signals</th></tr></thead>
 <tbody>
 <tr><td>514377</td><td>THE BANCORP BANK NATIONAL AS</td><td class="num">2.8%</td><td class="num">3.76%</td><td class="num">3.29%</td><td class="num">3.24%</td><td class="num">5.62%</td><td class="num"><span class="delta-positive">+2.38 pp</span></td><td><span class="sparkline-cell"><svg viewBox="0 0 120 28" width="120" height="28" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle"><path d="M2.0,20.8 L40.7,25.5 L79.3,26.0 L118.0,2.0" fill="none" stroke="#16A34A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="118.0" cy="2.0" r="2" fill="#16A34A"/></svg></span></td><td>—</td></tr>
@@ -346,8 +514,8 @@ table.table-dense tbody td.num { font-size: 12px; }
 </tbody>
 </table>
 </div>
-
-<h2>Dispute signals</h2>
+</div></details>
+<h2 id="dispute-signals">Dispute signals</h2>
 <table>
 <thead><tr><th>Category</th><th class="num">This week</th><th class="num">Full window</th></tr></thead>
 <tbody>
@@ -359,11 +527,11 @@ table.table-dense tbody td.num { font-size: 12px; }
 </tbody>
 </table>
 
-<h2>Auth-velocity covariate</h2>
+<h2 id="auth-velocity-covariate">Auth-velocity covariate</h2>
 <p class="section-intro">Two views per Appendix A.4: the CAID-level rollup (does attempt volume to an issuer correlate with that issuer's approval rate on our MID?) and the merchant-level drill-down (is degradation MID-wide or descriptor-specific?). Both views show the last 4 weeks side-by-side for WoW comparison.</p>
 <h3>A.4 (i) — CAID × BIN/Issuer (top 8 BINs by attempt volume)</h3>
 <div class="table-scroll">
-<table class="table-dense">
+<table class="table-dense table-sortable">
 <thead><tr><th>BIN6</th><th>Issuer</th><th class="num">Total attempts</th><th class="num">Avg rate</th><th class="num">Att 2026-04-27</th><th class="num">Att 2026-05-04</th><th class="num">Att 2026-05-11</th><th class="num">Att 2026-05-18</th><th>Rate trend</th></tr></thead>
 <tbody>
 <tr><td>403163</td><td>SUTTON BANK</td><td class="num">3,183</td><td class="num">15.56%</td><td class="num">1,095</td><td class="num">890</td><td class="num">856</td><td class="num">342</td><td>20.0% → 16.6% → 15.1% → 10.5%</td></tr>
@@ -381,7 +549,7 @@ table.table-dense tbody td.num { font-size: 12px; }
 <h3>A.4 (ii) — CAID × merchant × BIN/Issuer drill-down</h3>
 <p class="section-intro">Shows attempts per (merchant, BIN) pair for the top BINs above. If a single BIN is degrading and the drill-down shows ALL merchants on the MID seeing the same approval-rate hit, the issuer is responding to the MID itself. If only one merchant on the MID is affected, the issuer is responding to that merchant's descriptor / behavior — the MID is fine.</p>
 <div class="table-scroll">
-<table class="table-dense">
+<table class="table-dense table-sortable">
 <thead><tr><th>BIN6</th><th>Issuer</th><th>Merchant DBA</th><th class="num">This wk attempts</th><th class="num">This wk rate</th><th class="num">Prior wk attempts</th><th class="num">Prior wk rate</th></tr></thead>
 <tbody>
 <tr><td>403163</td><td>SUTTON BANK</td><td>Explodely LLC</td><td class="num">281</td><td class="num">12.1%</td><td class="num">729</td><td class="num">17.4%</td></tr>
@@ -404,7 +572,7 @@ table.table-dense tbody td.num { font-size: 12px; }
 </table>
 </div>
 
-<h2>Vs baseline (Appendix A.5)</h2>
+<h2 id="vs-baseline-appendix-a-5">Vs baseline (Appendix A.5)</h2>
 <p class="section-intro">Baseline = the cohort's normal-state approval rate over the 90 days before experiment launch, locked at launch and saved to <code>docs/baseline/&lt;launch-date&gt;_cohort_baseline.csv</code>. The columns below compare this week's top-BIN performance against that baseline so a 1.5pp WoW drop can be interpreted in context (e.g. "1.5pp below last week AND 5pp below baseline" reads differently than "1.5pp below last week, still at baseline").</p>
 <div class="note"><strong>Sample limitation.</strong> No baseline exists for this CAID (937700006246) since it is a live merchant CAID and the experiment has not run. The sample uses the earliest 4 weeks of the available window as a synthetic baseline (see <code>pivot_A5_937700006246.xlsx</code>). The table below shows the structure; production data will populate from the locked A.5 CSV.</div>
 <div class="table-scroll">
@@ -430,10 +598,10 @@ table.table-dense tbody td.num { font-size: 12px; }
 </table>
 </div>
 
-<h2>Cooldown recovery (Appendix A.6)</h2>
+<h2 id="cooldown-recovery-appendix-a-6">Cooldown recovery (Appendix A.6)</h2>
 <p class="section-intro">When a MID is pulled and reintroduced, Appendix A.6 compares per-BIN approval rate in the 7 days pre-pull vs the 7 days post-reintro and classifies each top BIN as RECOVERED / PARTIAL / NOT_RECOVERED. If &ge;50% of top BINs are RECOVERED, the cohort-level call is "reintroduce at 50/50 split"; otherwise pull again and extend rest by 15 days.</p>
 <div class="note">No pull / reintroduction event has occurred in the window for this CAID, so this section is empty. Structure preview: a per-BIN table (pre rate / post rate / Δ / status) plus a cohort rollup (% RECOVERED) drives the reintroduce-vs-extend decision. See <code>pivot_A6_937700006246.xlsx</code> for the format the operator pastes in.</div>
-<h2>Control-arm comparison (TEST vs CONTROL)</h2>
+<h2 id="control-arm-comparison-test-vs-control">Control-arm comparison (TEST vs CONTROL)</h2>
 <p class="section-intro">The experiment is a 50/50 split on in-scope CIT 1st-attempt Visa+MC credit-rail traffic: half routes to the experiment MID (TEST), the other half continues through the merchant's default cascade (CONTROL). The decision tree above is walked TWICE every week — once for each arm. If both arms degrade together, the cause is upstream of the experiment (merchant- or issuer-portfolio-wide). If only the TEST arm degrades, the new-MID hypothesis is directly supported. This comparison is the key interpretive frame for every pull decision.</p>
 <div class="note"><strong>Sample limitation.</strong> This sample report is generated from a single live CAID (937700006246) where no experiment routing is active, so only one arm of data exists. In production, mid_weekly_monitor.py will split the A1–A4 CSVs by <code>experiment_arm</code> tag and the table below will show TEST and CONTROL side-by-side with a delta column. Structure shown for reference.</div>
 <table>
@@ -447,12 +615,12 @@ table.table-dense tbody td.num { font-size: 12px; }
 </tbody>
 </table>
 
-<h2>Decision this week</h2>
+<h2 id="decision-this-week">Decision this week</h2>
 <div class="headline-card"><span class="pill pill-continue">CONTINUE</span> &nbsp; 2/15 top BINs flagged degrading (13.3%); majority threshold (50%) <strong>not reached</strong>.</div>
-<h2>Watch list for next week</h2>
+<h2 id="watch-list-for-next-week">Watch list for next week</h2>
 <p class="section-intro">BINs to track most closely going into next Monday's review, with their last-4-week approval-rate trajectory.</p>
 <div class="table-scroll">
-<table class="table-dense">
+<table class="table-dense table-sortable">
 <thead><tr><th>BIN6</th><th>Issuer</th><th>Status</th><th class="num">Share</th><th>Last 4 weeks approval rate</th><th>What promotes to DEGRADING</th></tr></thead>
 <tbody>
 <tr><td>403163</td><td>SUTTON BANK</td><td><span class="pill pill-degrading">degrading</span></td><td class="num">6.8%</td><td>20.00% → 16.63% → 15.07% → 10.53%</td><td>Already degrading — watch for further drop or recovery</td></tr>
@@ -471,5 +639,91 @@ table.table-dense tbody td.num { font-size: 12px; }
 </div>
 </div>
 </div>
+<script>
+(function(){
+  // ---- Sortable tables: click any column header to sort by that column.
+  function parseSortValue(text){
+    if(text == null) return null;
+    var t = String(text).trim();
+    if(t === '' || t === '-' || t === '—') return null;
+    // Strip common formatting: %, pp, $, commas, plus signs, parentheses
+    var clean = t.replace(/[,$%]/g, '').replace(/\+/g, '').replace(/\spp$/, '').trim();
+    var n = parseFloat(clean);
+    if(!isNaN(n)) return n;
+    return t.toLowerCase();
+  }
+  function sortTable(table, colIdx, dir){
+    var tbody = table.tBodies[0];
+    if(!tbody) return;
+    var rows = Array.prototype.slice.call(tbody.rows);
+    rows.sort(function(a, b){
+      var ca = a.cells[colIdx], cb = b.cells[colIdx];
+      var av = parseSortValue(ca ? ca.innerText : '');
+      var bv = parseSortValue(cb ? cb.innerText : '');
+      if(av === null && bv === null) return 0;
+      if(av === null) return 1;   // nulls sort to end
+      if(bv === null) return -1;
+      if(typeof av === 'number' && typeof bv === 'number'){
+        return dir === 'asc' ? av - bv : bv - av;
+      }
+      return dir === 'asc'
+        ? String(av).localeCompare(String(bv))
+        : String(bv).localeCompare(String(av));
+    });
+    rows.forEach(function(r){ tbody.appendChild(r); });
+  }
+  document.querySelectorAll('table.table-sortable thead th').forEach(function(th){
+    th.addEventListener('click', function(){
+      var table = th.closest('table');
+      var idx = Array.prototype.indexOf.call(th.parentNode.children, th);
+      var isAsc = th.classList.contains('sorted-asc');
+      table.querySelectorAll('thead th').forEach(function(x){
+        x.classList.remove('sorted-asc', 'sorted-desc');
+      });
+      var dir = isAsc ? 'desc' : 'asc';
+      th.classList.add('sorted-' + dir);
+      sortTable(table, idx, dir);
+    });
+  });
+
+  // ---- TOC active-section highlighting via IntersectionObserver
+  var tocLinks = document.querySelectorAll('.topbar-nav a');
+  if(tocLinks.length && 'IntersectionObserver' in window){
+    var sectionMap = {};
+    tocLinks.forEach(function(a){
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if(el) sectionMap[id] = a;
+    });
+    var visible = {};
+    function highlight(){
+      var current = null;
+      // Pick the section closest to top of viewport that's at least partially visible
+      Object.keys(visible).forEach(function(id){
+        if(visible[id] && (!current || visible[id].top < visible[current].top)){
+          current = id;
+        }
+      });
+      tocLinks.forEach(function(a){ a.classList.remove('toc-active'); });
+      if(current && sectionMap[current]){
+        sectionMap[current].classList.add('toc-active');
+      }
+    }
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          visible[e.target.id] = e.boundingClientRect;
+        } else {
+          delete visible[e.target.id];
+        }
+      });
+      highlight();
+    }, { rootMargin: '-72px 0px -60% 0px', threshold: 0 });
+    Object.keys(sectionMap).forEach(function(id){
+      obs.observe(document.getElementById(id));
+    });
+  }
+})();
+</script>
 </body>
 </html>

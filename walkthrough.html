@@ -39,11 +39,168 @@ body {
   background: var(--card);
   border-radius: 10px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
-  overflow: hidden;
+  /* No overflow:hidden so sticky-positioned children can pin to viewport */
 }
 .brand-bar {
   height: 5px;
   background: linear-gradient(90deg, var(--coral) 0%, var(--coral-dark) 100%);
+  border-radius: 10px 10px 0 0;
+}
+/* Sticky topbar: always-visible thin nav with title + CAID + jump-to nav */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.94);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 44px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.topbar-title {
+  font-weight: 700;
+  color: var(--charcoal);
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+}
+.topbar-meta {
+  color: var(--muted);
+  font-size: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.topbar-meta code {
+  background: var(--bg);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  color: var(--charcoal);
+  border: 1px solid var(--border);
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.topbar-nav {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.topbar-nav a {
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 4px 9px;
+  border-radius: 4px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.topbar-nav a:hover {
+  background: var(--bg);
+  color: var(--charcoal);
+}
+.topbar-nav a.toc-active {
+  background: rgba(255, 91, 91, 0.10);
+  color: var(--coral);
+  font-weight: 600;
+}
+.topbar-history {
+  font-size: 12px;
+  color: var(--coral);
+  text-decoration: none;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  white-space: nowrap;
+  margin-left: 6px;
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+.topbar-history:hover {
+  border-color: var(--coral);
+  background: rgba(255, 91, 91, 0.05);
+}
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+/* Collapsible section (details/summary) styling */
+details.collapsible {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0;
+  margin: 12px 0 16px;
+  background: var(--card);
+}
+details.collapsible > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--charcoal-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+details.collapsible > summary::-webkit-details-marker { display: none; }
+details.collapsible > summary::after {
+  content: '+';
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--coral);
+  margin-left: 8px;
+}
+details.collapsible[open] > summary::after { content: '−'; }
+details.collapsible > div.collapsible-body {
+  padding: 0 14px 12px;
+}
+/* Sortable table column headers */
+table.table-sortable thead th {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 20px;
+}
+table.table-sortable thead th::after {
+  content: '⇅';
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 9px;
+  opacity: 0.45;
+}
+table.table-sortable thead th.sorted-asc::after { content: '↑'; opacity: 1; }
+table.table-sortable thead th.sorted-desc::after { content: '↓'; opacity: 1; }
+/* Print: hide topbar, disable smooth scroll */
+@media print {
+  .topbar { display: none; }
+  html { scroll-behavior: auto; scroll-padding-top: 0; }
+  details.collapsible > summary { cursor: default; }
+  details.collapsible > summary::after { display: none; }
+  details.collapsible { border: none; }
+  details.collapsible > div.collapsible-body { padding: 0; }
+  details.collapsible[open] > summary { padding-bottom: 4px; }
 }
 .report-body { padding: 36px 44px 44px; }
 .report-header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 24px; }
@@ -258,19 +415,31 @@ table.table-dense tbody td.num { font-size: 12px; }
 <body>
 <div class="report">
 <div class="brand-bar"></div>
+<div class="topbar no-print">
+  <div class="topbar-inner">
+    <div class="topbar-left">
+      <span class="topbar-title">Decision-Tree Walkthrough</span>
+      <span class="topbar-meta"><span>CAID <code>937700006246</code></span><span>· 2026-05-23</span></span>
+    </div>
+    <div class="topbar-right">
+      <nav class="topbar-nav"><a href="#decision-summary">Summary</a><a href="#step-1-pull-last-week-s-data-per-bin-per-cohort">Step 1</a><a href="#step-2-amp-3-per-bin-signal-evaluation-and-status-assignment">Steps 2-3</a><a href="#step-4-count-top-bins-in-degrading-state">Step 4</a><a href="#step-5-apply-the-pull-rule-50-threshold">Step 5</a><a href="#step-6-ramp-stability-check-pre-stability-only">Step 6</a><a href="#step-7-reintroduction-rule-only-applies-to-a-cooled-mid">Step 7</a><a href="#step-8-control-comparison-interpretive-not-a-separate-trigger">Step 8</a></nav>
+      <a class="topbar-history" href="https://github.com/christ-flex/MIDical-Lab/commits/main/walkthrough.html" target="_blank" rel="noopener" title="View commit history for this report on GitHub">← History</a>
+    </div>
+  </div>
+</div>
 <div class="report-body">
 <div class="report-header">
 <div class="eyebrow">Weekly decision-tree walkthrough</div>
 <h1>MIDical Lab — Decision-Tree Walkthrough</h1>
 <div class="meta"><div class="meta-item"><span class="label">CAIDs:</span><code>937700006246 (sample — one cohort)</code></div><div class="meta-item"><span class="label">Run date:</span>2026-05-23</div><div class="meta-item"><span class="label">Source CSVs:</span><code>MIDical Lab/output/2026-05-20/</code></div></div>
 </div>
-<h2>Decision summary</h2>
+<h2 id="decision-summary">Decision summary</h2>
 <p class="section-intro">One line per cohort. Detail follows in the eight steps below.</p>
 <div class="kpi-row">
 <div class="kpi-card"><div class="kpi-label">Cohort: 937700006246 (sample)</div><div class="kpi-value positive">Continue</div><div class="kpi-sub">2/15 degrading (13.3%) — pull at 50%</div></div>
 <div class="kpi-card"><div class="kpi-label">Cohort: (second arm)</div><div class="kpi-value">awaiting data</div><div class="kpi-sub">Production runs LOW and MED side-by-side in this same file</div></div>
 </div>
-<h2>Step 1 — Pull last week's data per BIN per cohort</h2>
+<h2 id="step-1-pull-last-week-s-data-per-bin-per-cohort">Step 1 — Pull last week's data per BIN per cohort</h2>
 <p class="section-intro">Sources: A1 approval by BIN, A2 decline mix, A3 disputes, A4 velocity; plus decision_tree_perbin and decision_tree_permid.</p>
 <table>
 <thead><tr><th>Source CSV</th><th>Status</th><th class="num">Rows</th></tr></thead>
@@ -285,7 +454,7 @@ table.table-dense tbody td.num { font-size: 12px; }
 </tbody>
 </table>
 
-<h2>Step 2 &amp; 3 — Per-BIN signal evaluation and status assignment</h2>
+<h2 id="step-2-3-per-bin-signal-evaluation-and-status-assignment">Step 2 &amp; 3 — Per-BIN signal evaluation and status assignment</h2>
 <p class="section-intro">For each top BIN (≥1% of cohort CIT over trailing 30d), we check four signals. Only the PRIMARY signal (approval-rate slope drop ≥1.5pp WoW) drives DEGRADING when it fires in two consecutive weekly readings. The other three (decline-mix shift, new disputes, attempt-volume rising) drive WATCH only.</p>
 <div class="table-scroll">
 <table class="table-dense">
@@ -310,15 +479,15 @@ table.table-dense tbody td.num { font-size: 12px; }
 </table>
 </div>
 
-<h2>Step 4 — Count top BINs in DEGRADING state</h2>
+<h2 id="step-4-count-top-bins-in-degrading-state">Step 4 — Count top BINs in DEGRADING state</h2>
 <div class="headline-card"><strong>2</strong> of <strong>15</strong> top BINs are flagged DEGRADING (13.3%).</div>
-<h2>Step 5 — Apply the pull rule (50% threshold)</h2>
+<h2 id="step-5-apply-the-pull-rule-50-threshold">Step 5 — Apply the pull rule (50% threshold)</h2>
 <div class="headline-card"><span class="pill pill-continue">CONTINUE</span> &nbsp; 13.3% of top BINs are DEGRADING. Threshold is 50% — <strong>NOT reached — CONTINUE the MID in rotation</strong>.</div>
-<h2>Step 6 — Ramp-stability check (pre-stability only)</h2>
+<h2 id="step-6-ramp-stability-check-pre-stability-only">Step 6 — Ramp-stability check (pre-stability only)</h2>
 <p>The ramp-stability trigger fires when the MID's 7-day rolling approval rate has held steady (WoW absolute change ≤1.5pp) for two consecutive weekly readings (per Section 4.3). Before that trigger fires, the weekly run is treated as a warmup observation and pull decisions are paused. The current sample CAID is well past its ramp window (the input CSVs cover 9 weeks of activity), so this check is not gating the pull decision above.</p>
-<h2>Step 7 — Reintroduction rule (only applies to a cooled MID)</h2>
+<h2 id="step-7-reintroduction-rule-only-applies-to-a-cooled-mid">Step 7 — Reintroduction rule (only applies to a cooled MID)</h2>
 <p>If the MID is currently in cooldown, re-run steps 1–4 against the most recent 7 days of post-rest activity. &lt;50% DEGRADING → reintroduce at 50/50 split; ≥50% still DEGRADING → pull again, extend rest by 15 days, retry. Not applicable to the sample CAID — no pull/cooldown has occurred in the window.</p>
-<h2>Step 8 — Control comparison (interpretive, not a separate trigger)</h2>
+<h2 id="step-8-control-comparison-interpretive-not-a-separate-trigger">Step 8 — Control comparison (interpretive, not a separate trigger)</h2>
 <p>Re-run steps 1–4 against the CONTROL arm of the cohort — the 50% of in-scope CIT 1st-attempt traffic routed through the merchant's default cascade. Three readings:</p>
 <ul><li>BOTH arms degrade together → cause is upstream of the experiment (merchant-level or issuer-portfolio-wide). Pull may still fire on the experiment side, but the report should note the upstream cause.</li><li>ONLY the experiment side degrades → the new-MID hypothesis is directly supported. This is the strongest evidence the experiment can produce.</li><li>ONLY the control side degrades → unusual; investigate the cascade.</li></ul>
 <div class="note"><strong>Sample limitation.</strong> The sample report is generated from a single live CAID (937700006246) where no experiment routing is active, so only one arm of data exists. In production, mid_weekly_monitor.py will split the A1–A4 CSVs by <code>experiment_arm</code> tag and steps 1–4 will be repeated against the CONTROL arm, with the two arms compared in line. The single-arm result above is shown as structure for now.</div>
@@ -328,5 +497,91 @@ table.table-dense tbody td.num { font-size: 12px; }
 </div>
 </div>
 </div>
+<script>
+(function(){
+  // ---- Sortable tables: click any column header to sort by that column.
+  function parseSortValue(text){
+    if(text == null) return null;
+    var t = String(text).trim();
+    if(t === '' || t === '-' || t === '—') return null;
+    // Strip common formatting: %, pp, $, commas, plus signs, parentheses
+    var clean = t.replace(/[,$%]/g, '').replace(/\+/g, '').replace(/\spp$/, '').trim();
+    var n = parseFloat(clean);
+    if(!isNaN(n)) return n;
+    return t.toLowerCase();
+  }
+  function sortTable(table, colIdx, dir){
+    var tbody = table.tBodies[0];
+    if(!tbody) return;
+    var rows = Array.prototype.slice.call(tbody.rows);
+    rows.sort(function(a, b){
+      var ca = a.cells[colIdx], cb = b.cells[colIdx];
+      var av = parseSortValue(ca ? ca.innerText : '');
+      var bv = parseSortValue(cb ? cb.innerText : '');
+      if(av === null && bv === null) return 0;
+      if(av === null) return 1;   // nulls sort to end
+      if(bv === null) return -1;
+      if(typeof av === 'number' && typeof bv === 'number'){
+        return dir === 'asc' ? av - bv : bv - av;
+      }
+      return dir === 'asc'
+        ? String(av).localeCompare(String(bv))
+        : String(bv).localeCompare(String(av));
+    });
+    rows.forEach(function(r){ tbody.appendChild(r); });
+  }
+  document.querySelectorAll('table.table-sortable thead th').forEach(function(th){
+    th.addEventListener('click', function(){
+      var table = th.closest('table');
+      var idx = Array.prototype.indexOf.call(th.parentNode.children, th);
+      var isAsc = th.classList.contains('sorted-asc');
+      table.querySelectorAll('thead th').forEach(function(x){
+        x.classList.remove('sorted-asc', 'sorted-desc');
+      });
+      var dir = isAsc ? 'desc' : 'asc';
+      th.classList.add('sorted-' + dir);
+      sortTable(table, idx, dir);
+    });
+  });
+
+  // ---- TOC active-section highlighting via IntersectionObserver
+  var tocLinks = document.querySelectorAll('.topbar-nav a');
+  if(tocLinks.length && 'IntersectionObserver' in window){
+    var sectionMap = {};
+    tocLinks.forEach(function(a){
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if(el) sectionMap[id] = a;
+    });
+    var visible = {};
+    function highlight(){
+      var current = null;
+      // Pick the section closest to top of viewport that's at least partially visible
+      Object.keys(visible).forEach(function(id){
+        if(visible[id] && (!current || visible[id].top < visible[current].top)){
+          current = id;
+        }
+      });
+      tocLinks.forEach(function(a){ a.classList.remove('toc-active'); });
+      if(current && sectionMap[current]){
+        sectionMap[current].classList.add('toc-active');
+      }
+    }
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          visible[e.target.id] = e.boundingClientRect;
+        } else {
+          delete visible[e.target.id];
+        }
+      });
+      highlight();
+    }, { rootMargin: '-72px 0px -60% 0px', threshold: 0 });
+    Object.keys(sectionMap).forEach(function(id){
+      obs.observe(document.getElementById(id));
+    });
+  }
+})();
+</script>
 </body>
 </html>
