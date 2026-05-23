@@ -4,10 +4,10 @@ Static HTML samples from the MIDical Lab experiment, hosted via GitHub Pages.
 
 ## Live links
 
-- **Landing page** — `https://christ-flex.github.io/midical-lab-reports/`
-- **Weekly report** — `https://christ-flex.github.io/midical-lab-reports/weekly.html`
-- **Monthly deep dive** — `https://christ-flex.github.io/midical-lab-reports/monthly.html`
-- **Decision-tree walkthrough** — `https://christ-flex.github.io/midical-lab-reports/walkthrough.html`
+- **Landing page** — `https://christ-flex.github.io/MIDical-Lab/`
+- **Weekly report** — `https://christ-flex.github.io/MIDical-Lab/weekly.html`
+- **Monthly deep dive** — `https://christ-flex.github.io/MIDical-Lab/monthly.html`
+- **Decision-tree walkthrough** — `https://christ-flex.github.io/MIDical-Lab/walkthrough.html`
 
 ## What's in here
 
