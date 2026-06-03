@@ -34,7 +34,9 @@ body {
   font-size: 14px;
 }
 .report {
-  max-width: 1120px;
+  /* Wide layout so the column-heavy per-BIN tables (scheme + weekly rates +
+     settled/dispute columns) show more at once before horizontal scroll. */
+  width: min(1680px, 97vw);
   margin: 0 auto;
   background: var(--card);
   border-radius: 10px;
@@ -353,6 +355,10 @@ table.table-dense { font-size: 12px; }
 table.table-dense thead th { padding: 7px 9px; font-size: 10px; letter-spacing: 0.04em; }
 table.table-dense tbody td { padding: 6px 9px; }
 table.table-dense tbody td.num { font-size: 12px; }
+/* Reserve right padding for the sort arrow on dense sortable headers so the
+   arrow never overlaps the header text (two-class selector beats .table-dense). */
+table.table-dense.table-sortable thead th { padding-right: 18px; }
+table.table-sortable thead th::after { right: 5px; }
 .chart-wrap {
   background: var(--card);
   border: 1px solid var(--border);
