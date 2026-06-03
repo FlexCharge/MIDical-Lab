@@ -419,7 +419,7 @@ table.table-dense tbody td.num { font-size: 12px; }
   <div class="topbar-inner">
     <div class="topbar-left">
       <span class="topbar-title">Decision-Tree Walkthrough</span>
-      <span class="topbar-meta"><span>CAID <code>937700006246</code></span><span>· 2026-05-27</span></span>
+      <span class="topbar-meta"><span>CAID <code>937700006246</code></span><span>· 2026-06-03</span></span>
     </div>
     <div class="topbar-right">
       <nav class="topbar-nav"><a href="#decision-summary">Summary</a><a href="#step-1-pull-last-week-s-data-per-bin-per-cohort">Step 1</a><a href="#step-2-amp-3-per-bin-signal-evaluation-and-status-assignment">Steps 2-3</a><a href="#step-4-count-top-bins-in-degrading-state">Step 4</a><a href="#step-5-apply-the-pull-rule-50-threshold">Step 5</a><a href="#step-6-ramp-stability-check-pre-stability-only">Step 6</a><a href="#step-7-reintroduction-rule-only-applies-to-a-cooled-mid">Step 7</a><a href="#step-8-control-comparison-interpretive-not-a-separate-trigger">Step 8</a></nav>
@@ -431,12 +431,12 @@ table.table-dense tbody td.num { font-size: 12px; }
 <div class="report-header">
 <div class="eyebrow">Weekly decision-tree walkthrough</div>
 <h1>MIDical Lab — Decision-Tree Walkthrough</h1>
-<div class="meta"><div class="meta-item"><span class="label">CAIDs:</span><code>937700006246 (sample — one cohort)</code></div><div class="meta-item"><span class="label">Run date:</span>2026-05-27</div><div class="meta-item"><span class="label">Source CSVs:</span><code>MIDical Lab/output/2026-05-20/</code></div></div>
+<div class="meta"><div class="meta-item"><span class="label">CAIDs:</span><code>937700006246 (sample — one cohort)</code></div><div class="meta-item"><span class="label">Run date:</span>2026-06-03</div><div class="meta-item"><span class="label">Source CSVs:</span><code>MIDical Lab/output/2026-06-03/</code></div></div>
 </div>
 <h2 id="decision-summary">Decision summary</h2>
 <p class="section-intro">One line per cohort. Detail follows in the eight steps below.</p>
 <div class="kpi-row">
-<div class="kpi-card"><div class="kpi-label">Cohort: 937700006246 (sample)</div><div class="kpi-value positive">Continue</div><div class="kpi-sub">2/15 degrading (13.3%) — pull at 50%</div></div>
+<div class="kpi-card"><div class="kpi-label">Cohort: 937700006246 (sample)</div><div class="kpi-value positive">Continue</div><div class="kpi-sub">2/14 degrading (14.3%) — pull at 50%</div></div>
 <div class="kpi-card"><div class="kpi-label">Cohort: (second arm)</div><div class="kpi-value">awaiting data</div><div class="kpi-sub">Production runs LOW and MED side-by-side in this same file</div></div>
 </div>
 <h2 id="step-1-pull-last-week-s-data-per-bin-per-cohort">Step 1 — Pull last week's data per BIN per cohort</h2>
@@ -444,12 +444,12 @@ table.table-dense tbody td.num { font-size: 12px; }
 <table>
 <thead><tr><th>Source CSV</th><th>Status</th><th class="num">Rows</th></tr></thead>
 <tbody>
-<tr><td>A1_approval_by_bin.csv</td><td>loaded</td><td class="num">16,574</td></tr>
-<tr><td>A2_decline_mix.csv</td><td>loaded</td><td class="num">22,449</td></tr>
-<tr><td>A3_disputes.csv</td><td>loaded</td><td class="num">456</td></tr>
-<tr><td>A4i_caid_bin_velocity.csv</td><td>loaded</td><td class="num">16,574</td></tr>
-<tr><td>A4ii_caid_merchant_bin_velocity.csv</td><td>loaded</td><td class="num">29,275</td></tr>
-<tr><td>decision_tree_perbin.csv</td><td>loaded</td><td class="num">15</td></tr>
+<tr><td>A1_approval_by_bin.csv</td><td>loaded</td><td class="num">17,473</td></tr>
+<tr><td>A2_decline_mix.csv</td><td>loaded</td><td class="num">23,829</td></tr>
+<tr><td>A3_disputes.csv</td><td>loaded</td><td class="num">411</td></tr>
+<tr><td>A4i_caid_bin_velocity.csv</td><td>loaded</td><td class="num">17,473</td></tr>
+<tr><td>A4ii_caid_merchant_bin_velocity.csv</td><td>loaded</td><td class="num">31,940</td></tr>
+<tr><td>decision_tree_perbin.csv</td><td>loaded</td><td class="num">14</td></tr>
 <tr><td>decision_tree_permid.csv</td><td>loaded</td><td class="num">1</td></tr>
 </tbody>
 </table>
@@ -460,29 +460,28 @@ table.table-dense tbody td.num { font-size: 12px; }
 <table class="table-dense">
 <thead><tr><th>BIN6</th><th>Issuer</th><th class="num">Share</th><th class="num">Approval (this wk)</th><th class="num">Approval (prior wk)</th><th class="num">WoW slope</th><th>Decline-mix shift</th><th>New disputes</th><th>Volume rising</th><th>Status</th></tr></thead>
 <tbody>
-<tr><td>403163</td><td>SUTTON BANK</td><td class="num">6.8%</td><td class="num">10.53%</td><td class="num">15.07%</td><td class="num"><span class="delta-negative">-4.54 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-degrading">degrading</span></td></tr>
-<tr><td>533248</td><td>COMERICA BANK</td><td class="num">2.2%</td><td class="num">4.41%</td><td class="num">7.00%</td><td class="num"><span class="delta-negative">-2.59 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-degrading">degrading</span></td></tr>
-<tr><td>413331</td><td>GREEN DOT BANK DBA BONNE</td><td class="num">1.1%</td><td class="num">0.00%</td><td class="num">1.27%</td><td class="num"><span class="delta-negative">-1.27 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
-<tr><td>423223</td><td>THE BANCORP BANK, NATION</td><td class="num">1.0%</td><td class="num">0.00%</td><td class="num">1.06%</td><td class="num"><span class="delta-negative">-1.06 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
-<tr><td>447227</td><td>STRIDE BANK, NATIONAL AS</td><td class="num">1.5%</td><td class="num">3.33%</td><td class="num">2.75%</td><td class="num"><span class="delta-positive">+0.59 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
-<tr><td>434256</td><td>WELLS FARGO BANK, NATION</td><td class="num">1.5%</td><td class="num">4.17%</td><td class="num">3.43%</td><td class="num"><span class="delta-positive">+0.74 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
-<tr><td>444796</td><td>CREDIT ONE BANK, NATIONA</td><td class="num">1.4%</td><td class="num">1.64%</td><td class="num">0.74%</td><td class="num"><span class="delta-positive">+0.90 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
-<tr><td>473702</td><td>WELLS FARGO BANK, NATION</td><td class="num">1.3%</td><td class="num">6.15%</td><td class="num">5.22%</td><td class="num"><span class="delta-positive">+0.94 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
-<tr><td>400895</td><td>THE BANCORP BANK, NATION</td><td class="num">1.2%</td><td class="num">4.76%</td><td class="num">2.60%</td><td class="num"><span class="delta-positive">+2.16 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
-<tr><td>514377</td><td>THE BANCORP BANK NATIONA</td><td class="num">2.8%</td><td class="num">5.62%</td><td class="num">3.24%</td><td class="num"><span class="delta-positive">+2.39 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
-<tr><td>400022</td><td>NAVY FEDERAL CREDIT UNIO</td><td class="num">1.5%</td><td class="num">15.38%</td><td class="num">7.10%</td><td class="num"><span class="delta-positive">+8.28 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
-<tr><td>414740</td><td>JPMORGAN CHASE BANK N.A.</td><td class="num">1.4%</td><td class="num">10.61%</td><td class="num">16.18%</td><td class="num"><span class="delta-negative">-5.58 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-negative">YES</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-watch">watch</span></td></tr>
-<tr><td>426684</td><td>JPMORGAN CHASE BANK N.A.</td><td class="num">1.8%</td><td class="num">5.68%</td><td class="num">9.78%</td><td class="num"><span class="delta-negative">-4.10 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-negative">YES</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-watch">watch</span></td></tr>
-<tr><td>414720</td><td>JPMORGAN CHASE BANK N.A.</td><td class="num">1.6%</td><td class="num">2.86%</td><td class="num">4.48%</td><td class="num"><span class="delta-negative">-1.63 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-watch">watch</span></td></tr>
-<tr><td>440393</td><td>SUTTON BANK</td><td class="num">1.1%</td><td class="num">24.32%</td><td class="num">15.22%</td><td class="num"><span class="delta-positive">+9.11 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-negative">YES</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-watch">watch</span></td></tr>
+<tr><td>473702</td><td>WELLS FARGO BANK, NATION</td><td class="num">1.3%</td><td class="num">1.92%</td><td class="num">3.91%</td><td class="num"><span class="delta-negative">-1.98 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-degrading">degrading</span></td></tr>
+<tr><td>414740</td><td>JPMORGAN CHASE BANK N.A.</td><td class="num">1.3%</td><td class="num">4.35%</td><td class="num">6.08%</td><td class="num"><span class="delta-negative">-1.73 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-degrading">degrading</span></td></tr>
+<tr><td>444796</td><td>CREDIT ONE BANK, NATIONA</td><td class="num">1.3%</td><td class="num">0.00%</td><td class="num">0.68%</td><td class="num"><span class="delta-negative">-0.68 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
+<tr><td>426684</td><td>JPMORGAN CHASE BANK N.A.</td><td class="num">1.7%</td><td class="num">5.00%</td><td class="num">5.03%</td><td class="num"><span class="delta-negative">-0.03 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
+<tr><td>514377</td><td>THE BANCORP BANK NATIONA</td><td class="num">2.9%</td><td class="num">5.51%</td><td class="num">3.86%</td><td class="num"><span class="delta-positive">+1.65 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
+<tr><td>533248</td><td>COMERICA BANK</td><td class="num">2.0%</td><td class="num">6.45%</td><td class="num">4.58%</td><td class="num"><span class="delta-positive">+1.88 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
+<tr><td>440393</td><td>SUTTON BANK</td><td class="num">1.1%</td><td class="num">14.58%</td><td class="num">12.15%</td><td class="num"><span class="delta-positive">+2.43 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
+<tr><td>434256</td><td>WELLS FARGO BANK, NATION</td><td class="num">1.4%</td><td class="num">7.14%</td><td class="num">2.86%</td><td class="num"><span class="delta-positive">+4.29 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
+<tr><td>400022</td><td>NAVY FEDERAL CREDIT UNIO</td><td class="num">1.5%</td><td class="num">13.04%</td><td class="num">8.33%</td><td class="num"><span class="delta-positive">+4.71 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
+<tr><td>447227</td><td>STRIDE BANK, NATIONAL AS</td><td class="num">1.5%</td><td class="num">9.52%</td><td class="num">3.21%</td><td class="num"><span class="delta-positive">+6.32 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-healthy">healthy</span></td></tr>
+<tr><td>414720</td><td>JPMORGAN CHASE BANK N.A.</td><td class="num">1.6%</td><td class="num">3.90%</td><td class="num">6.49%</td><td class="num"><span class="delta-negative">-2.60 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-negative">YES</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-watch">watch</span></td></tr>
+<tr><td>413331</td><td>GREEN DOT BANK DBA BONNE</td><td class="num">1.1%</td><td class="num">2.44%</td><td class="num">4.49%</td><td class="num"><span class="delta-negative">-2.06 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-watch">watch</span></td></tr>
+<tr><td>400895</td><td>THE BANCORP BANK, NATION</td><td class="num">1.2%</td><td class="num">0.00%</td><td class="num">1.65%</td><td class="num"><span class="delta-negative">-1.65 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-watch">watch</span></td></tr>
+<tr><td>403163</td><td>SUTTON BANK</td><td class="num">6.9%</td><td class="num">16.15%</td><td class="num">14.22%</td><td class="num"><span class="delta-positive">+1.93 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-negative">YES</span></td><td><span class="delta-zero">no</span></td><td><span class="pill pill-watch">watch</span></td></tr>
 </tbody>
 </table>
 </div>
 
 <h2 id="step-4-count-top-bins-in-degrading-state">Step 4 — Count top BINs in DEGRADING state</h2>
-<div class="headline-card"><strong>2</strong> of <strong>15</strong> top BINs are flagged DEGRADING (13.3%).</div>
+<div class="headline-card"><strong>2</strong> of <strong>14</strong> top BINs are flagged DEGRADING (14.3%).</div>
 <h2 id="step-5-apply-the-pull-rule-50-threshold">Step 5 — Apply the pull rule (50% threshold)</h2>
-<div class="headline-card"><span class="pill pill-continue">CONTINUE</span> &nbsp; 13.3% of top BINs are DEGRADING. Threshold is 50% — <strong>NOT reached — CONTINUE the MID in rotation</strong>.</div>
+<div class="headline-card"><span class="pill pill-continue">CONTINUE</span> &nbsp; 14.3% of top BINs are DEGRADING. Threshold is 50% — <strong>NOT reached — CONTINUE the MID in rotation</strong>.</div>
 <h2 id="step-6-ramp-stability-check-pre-stability-only">Step 6 — Ramp-stability check (pre-stability only)</h2>
 <p>The ramp-stability trigger fires when the MID's 7-day rolling approval rate has held steady (WoW absolute change ≤1.5pp) for two consecutive weekly readings (per Section 4.3). Before that trigger fires, the weekly run is treated as a warmup observation and pull decisions are paused. The current sample CAID is well past its ramp window (the input CSVs cover 9 weeks of activity), so this check is not gating the pull decision above.</p>
 <h2 id="step-7-reintroduction-rule-only-applies-to-a-cooled-mid">Step 7 — Reintroduction rule (only applies to a cooled MID)</h2>
@@ -492,7 +491,7 @@ table.table-dense tbody td.num { font-size: 12px; }
 <ul><li>BOTH arms degrade together → cause is upstream of the experiment (merchant-level or issuer-portfolio-wide). Pull may still fire on the experiment side, but the report should note the upstream cause.</li><li>ONLY the experiment side degrades → the new-MID hypothesis is directly supported. This is the strongest evidence the experiment can produce.</li><li>ONLY the control side degrades → unusual; investigate the cascade.</li></ul>
 <div class="note"><strong>Sample limitation.</strong> The sample report is generated from a single live CAID (937700006246) where no experiment routing is active, so only one arm of data exists. In production, mid_weekly_monitor.py will split the A1–A4 CSVs by <code>experiment_arm</code> tag and steps 1–4 will be repeated against the CONTROL arm, with the two arms compared in line. The single-arm result above is shown as structure for now.</div>
 <div class="footer">
-<div>Generated 2026-05-27 by <strong>MIDical Lab</strong> · FlexFactor</div>
+<div>Generated 2026-06-03 by <strong>MIDical Lab</strong> · FlexFactor</div>
 <div>Source: Appendix B.1 of the experiment plan</div>
 </div>
 </div>
