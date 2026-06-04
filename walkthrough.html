@@ -445,7 +445,7 @@ table.table-sortable thead th::after { right: 5px; }
 <h1>MIDical Lab — Decision-Tree Walkthrough</h1>
 <div class="meta"><div class="meta-item"><span class="label">CAIDs:</span><code>937700006246 (sample — one cohort)</code></div><div class="meta-item"><span class="label">Run date:</span>2026-06-04</div><div class="meta-item"><span class="label">Source CSVs:</span><code>MIDical Lab/output/2026-06-04/</code></div></div>
 </div>
-<div class="note"><strong>Date window.</strong> All data in this report covers <strong>2026-04-06 to 2026-06-01</strong> (9 weeks). Reading convention: columns labeled with a week-of date (or "this wk" / "prior wk") are <strong>per-week</strong>; the Auth / Settled / Disp count and $ columns marked <strong>"win"</strong> are <strong>cumulative over the full window</strong>. Every table also carries its own window caption.</div>
+<div class="note"><strong>Date window.</strong> All data in this report covers <strong>2026-04-06 to 2026-06-01</strong> (9 weeks). Reading convention: columns labeled with a week-of date (or "this wk" / "prior wk") are <strong>per-week</strong>; the Auth / Settled / Disp count and $ columns marked <strong>"(window)"</strong> are <strong>cumulative over the full window</strong>. Every table also carries its own window caption.</div>
 <h2 id="decision-summary">Decision summary</h2>
 <p class="section-intro">One line per cohort. Detail follows in the eight steps below.</p>
 <div class="kpi-row">
@@ -472,7 +472,7 @@ table.table-sortable thead th::after { right: 5px; }
 <p class="section-intro">For each top BIN (≥1% of cohort CIT over trailing 30d), we check four signals. Only the PRIMARY signal (approval-rate slope drop ≥1.5pp WoW) drives DEGRADING when it fires in two consecutive weekly readings. The other three (decline-mix shift, new disputes, attempt-volume rising) drive WATCH only.</p>
 <div class="table-scroll">
 <table class="table-dense table-sortable">
-<thead><tr><th>BIN6</th><th>Scheme</th><th>Issuer</th><th class="num">Share</th><th class="num">Approval (this wk)</th><th class="num">Approval (prior wk)</th><th class="num">WoW slope</th><th>Decline-mix shift</th><th>New disputes</th><th>Volume rising</th><th class="num">Auth Ct (win)</th><th class="num">Settled Ct (win)</th><th class="num">Settled $ (win)</th><th class="num">Disp Ct (win)</th><th class="num">Disp $ (win)</th><th>Status</th></tr></thead>
+<thead><tr><th>BIN6</th><th>Scheme</th><th>Issuer</th><th class="num">Share</th><th class="num">Approval (this wk)</th><th class="num">Approval (prior wk)</th><th class="num">WoW slope</th><th>Decline-mix shift</th><th>New disputes</th><th>Volume rising</th><th class="num">Auth Ct (window)</th><th class="num">Settled Ct (window)</th><th class="num">Settled $ (window)</th><th class="num">Disp Ct (window)</th><th class="num">Disp $ (window)</th><th>Status</th></tr></thead>
 <tbody>
 <tr><td>414740</td><td>Visa</td><td>JPMORGAN CHASE BANK N.A.</td><td class="num">1.4%</td><td class="num">3.23%</td><td class="num">6.08%</td><td class="num"><span class="delta-negative">-2.86 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td class="num">1,077</td><td class="num">96</td><td class="num">$4,008</td><td class="num">3</td><td class="num">$241</td><td><span class="pill pill-degrading">degrading</span></td></tr>
 <tr><td>473702</td><td>Visa</td><td>WELLS FARGO BANK, NATION</td><td class="num">1.3%</td><td class="num">2.86%</td><td class="num">3.91%</td><td class="num"><span class="delta-negative">-1.05 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td class="num">1,004</td><td class="num">58</td><td class="num">$3,577</td><td class="num">11</td><td class="num">$688</td><td><span class="pill pill-healthy">healthy</span></td></tr>
@@ -491,7 +491,7 @@ table.table-sortable thead th::after { right: 5px; }
 </tbody>
 </table>
 </div>
-<div class="tbl-cap">Window: 2026-04-06 to 2026-06-01 (9 weeks). Approval columns are per-week (this vs prior week); the Auth / Settled / Disp count and $ columns (marked "win") are cumulative over the full window 2026-04-06 to 2026-06-01.</div>
+<div class="tbl-cap">Window: 2026-04-06 to 2026-06-01 (9 weeks). Approval columns are per-week (this vs prior week); the Auth / Settled / Disp count and $ columns (marked "window") are cumulative over the full window 2026-04-06 to 2026-06-01.</div>
 
 <h2 id="step-4-count-top-bins-in-degrading-state">Step 4 — Count top BINs in DEGRADING state</h2>
 <div class="headline-card"><strong>1</strong> of <strong>14</strong> top BINs are flagged DEGRADING (7.1%).</div>
