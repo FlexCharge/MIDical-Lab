@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIDical Lab — Decision-Tree Walkthrough (MED cohort)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --coral: #FF5B5B;
+  --coral-dark: #E84545;
+  --charcoal: #3C3C42;
+  --charcoal-soft: #5A5A63;
+  --bg: #F8F8F8;
+  --card: #FFFFFF;
+  --border: #E5E5EA;
+  --muted: #6B7280;
+  --positive: #16A34A;
+  --positive-bg: #D1FAE5;
+  --negative: #DC2626;
+  --negative-bg: #FEE2E2;
+  --warning: #B45309;
+  --warning-bg: #FEF3C7;
+}
+* { box-sizing: border-box; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--charcoal);
+  margin: 0;
+  padding: 32px 16px;
+  line-height: 1.55;
+  font-size: 14px;
+}
+.report {
+  /* Wide layout so the column-heavy per-BIN tables (scheme + weekly rates +
+     settled/dispute columns) show more at once before horizontal scroll. */
+  width: min(1680px, 97vw);
+  margin: 0 auto;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+  /* No overflow:hidden so sticky-positioned children can pin to viewport */
+}
+.brand-bar {
+  height: 5px;
+  background: linear-gradient(90deg, var(--coral) 0%, var(--coral-dark) 100%);
+  border-radius: 10px 10px 0 0;
+}
+/* Sticky topbar: always-visible thin nav with title + CAID + jump-to nav */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.94);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 44px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.topbar-title {
+  font-weight: 700;
+  color: var(--charcoal);
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+}
+.topbar-meta {
+  color: var(--muted);
+  font-size: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.topbar-meta code {
+  background: var(--bg);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  color: var(--charcoal);
+  border: 1px solid var(--border);
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.topbar-nav {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.topbar-nav a {
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 4px 9px;
+  border-radius: 4px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.topbar-nav a:hover {
+  background: var(--bg);
+  color: var(--charcoal);
+}
+.topbar-nav a.toc-active {
+  background: rgba(255, 91, 91, 0.10);
+  color: var(--coral);
+  font-weight: 600;
+}
+.topbar-history {
+  font-size: 12px;
+  color: var(--coral);
+  text-decoration: none;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  white-space: nowrap;
+  margin-left: 6px;
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+.topbar-history:hover {
+  border-color: var(--coral);
+  background: rgba(255, 91, 91, 0.05);
+}
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+/* Collapsible section (details/summary) styling */
+details.collapsible {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0;
+  margin: 12px 0 16px;
+  background: var(--card);
+}
+details.collapsible > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--charcoal-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+details.collapsible > summary::-webkit-details-marker { display: none; }
+details.collapsible > summary::after {
+  content: '+';
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--coral);
+  margin-left: 8px;
+}
+details.collapsible[open] > summary::after { content: '−'; }
+details.collapsible > div.collapsible-body {
+  padding: 0 14px 12px;
+}
+/* Sortable table column headers */
+table.table-sortable thead th {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 20px;
+}
+table.table-sortable thead th::after {
+  content: '⇅';
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 9px;
+  opacity: 0.45;
+}
+table.table-sortable thead th.sorted-asc::after { content: '↑'; opacity: 1; }
+table.table-sortable thead th.sorted-desc::after { content: '↓'; opacity: 1; }
+/* Print: hide topbar, disable smooth scroll */
+@media print {
+  .topbar { display: none; }
+  html { scroll-behavior: auto; scroll-padding-top: 0; }
+  details.collapsible > summary { cursor: default; }
+  details.collapsible > summary::after { display: none; }
+  details.collapsible { border: none; }
+  details.collapsible > div.collapsible-body { padding: 0; }
+  details.collapsible[open] > summary { padding-bottom: 4px; }
+}
+.report-body { padding: 36px 44px 44px; }
+.report-header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 24px; }
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-bottom: 8px;
+}
+h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--charcoal);
+  margin: 0 0 10px;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+h2 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin: 32px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: -0.005em;
+}
+h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--charcoal-soft);
+  margin: 22px 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+p { margin: 8px 0 12px; }
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.meta-item .label {
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-right: 5px;
+}
+.meta-item code {
+  background: var(--bg);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: var(--charcoal);
+  border: 1px solid var(--border);
+}
+.headline-card {
+  background: var(--bg);
+  border-left: 4px solid var(--coral);
+  padding: 18px 22px;
+  margin: 14px 0 22px;
+  border-radius: 0 6px 6px 0;
+  font-size: 15px;
+}
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+  margin: 18px 0 8px;
+}
+.kpi-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.kpi-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  font-weight: 700;
+}
+.kpi-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--charcoal);
+  margin-top: 6px;
+  letter-spacing: -0.01em;
+}
+.kpi-value.positive { color: var(--positive); }
+.kpi-value.negative { color: var(--negative); }
+.kpi-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 16px;
+  font-size: 13px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+thead th {
+  background: var(--charcoal);
+  color: #FFFFFF;
+  font-weight: 600;
+  text-align: left;
+  padding: 9px 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--charcoal);
+  white-space: nowrap;
+}
+thead th.num { text-align: right; }
+tbody td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+tbody td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+tbody td.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+}
+tbody tr:nth-child(even) td { background: #FAFAFB; }
+tbody tr:last-child td { border-bottom: none; }
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin: 12px 0 16px;
+  background: var(--card);
+}
+.table-scroll > table {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  min-width: max-content;
+}
+table.table-dense { font-size: 12px; }
+table.table-dense thead th { padding: 7px 9px; font-size: 10px; letter-spacing: 0.04em; }
+table.table-dense tbody td { padding: 6px 9px; }
+table.table-dense tbody td.num { font-size: 12px; }
+/* Reserve right padding for the sort arrow on dense sortable headers so the
+   arrow never overlaps the header text (two-class selector beats .table-dense). */
+table.table-dense.table-sortable thead th { padding-right: 18px; }
+table.table-sortable thead th::after { right: 5px; }
+.chart-wrap {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px 6px;
+  margin: 12px 0 18px;
+  overflow: hidden;
+}
+.chart-wrap svg { width: 100%; height: auto; display: block; }
+.sparkline-cell svg { display: inline-block; }
+.pill {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 11px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.pill-degrading { background: var(--negative-bg); color: #B91C1C; }
+.pill-watch     { background: var(--warning-bg); color: var(--warning); }
+.pill-healthy   { background: var(--positive-bg); color: #047857; }
+.pill-pull      { background: var(--negative-bg); color: #B91C1C; }
+.pill-continue  { background: var(--positive-bg); color: #047857; }
+.delta-positive { color: var(--positive); font-weight: 600; }
+.delta-negative { color: var(--negative); font-weight: 600; }
+.delta-zero     { color: var(--muted); }
+.note {
+  background: var(--bg);
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--charcoal-soft);
+  margin: 14px 0;
+  border-left: 3px solid var(--border);
+}
+.tbl-cap {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 6px 2px 18px;
+  line-height: 1.45;
+}
+.section-intro { color: var(--charcoal-soft); margin: 4px 0 12px; }
+.recs { padding-left: 22px; }
+.recs li { margin: 8px 0; }
+.footer {
+  border-top: 1px solid var(--border);
+  margin-top: 36px;
+  padding-top: 14px;
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+@media print {
+  body { background: white; padding: 0; font-size: 11px; }
+  .report { box-shadow: none; border-radius: 0; }
+  .report-body { padding: 24px 28px; }
+  thead th { background: #3C3C42 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<div class="report">
+<div class="brand-bar"></div>
+<div class="topbar no-print">
+  <div class="topbar-inner">
+    <div class="topbar-left">
+      <span class="topbar-title">Decision-Tree Walkthrough -- MED</span>
+      <span class="topbar-meta"><span>CAID <code>937700006857</code></span><span>· 2026-06-05</span></span>
+    </div>
+    <div class="topbar-right">
+      <nav class="topbar-nav"><a href="#decision-summary">Summary</a><a href="#step-1-pull-last-week-s-data-per-bin-per-cohort">Step 1</a><a href="#step-2-amp-3-per-bin-signal-evaluation-and-status-assignment">Steps 2-3</a><a href="#step-4-count-top-bins-in-degrading-state">Step 4</a><a href="#step-5-apply-the-pull-rule-50-threshold">Step 5</a><a href="#step-6-ramp-stability-check-pre-stability-only">Step 6</a><a href="#step-7-reintroduction-rule-only-applies-to-a-cooled-mid">Step 7</a><a href="#step-8-control-comparison-interpretive-not-a-separate-trigger">Step 8</a></nav>
+      <a class="topbar-history" href="https://flexcharge.github.io/MIDical-Lab/" title="Landing page -- all prior weeks">All weeks</a>
+      <a class="topbar-history" href="https://github.com/FlexCharge/MIDical-Lab/commits/main/walkthrough.html" target="_blank" rel="noopener" title="View commit history for this report on GitHub">← History</a>
+    </div>
+  </div>
+</div>
+<div class="report-body">
+<div class="report-header">
+<div class="eyebrow">Weekly decision-tree walkthrough</div>
+<h1>MIDical Lab — Decision-Tree Walkthrough (MED cohort)</h1>
+<div class="meta"><div class="meta-item"><span class="label">CAIDs:</span><code>937700006857 (sample — one cohort)</code></div><div class="meta-item"><span class="label">Run date:</span>2026-06-05</div><div class="meta-item"><span class="label">Source CSVs:</span><code>MIDical Lab/output/2026-06-05/</code></div></div>
+</div>
+<div class="note"><strong>Single-week snapshot.</strong> This report covers only the <strong>current report week (Jun 1-7)</strong> -- every table shows this week, with count and $ columns marked <strong>"(this wk)"</strong>, and approval rate broken out by scheme (Total / Visa / Mastercard). Run fresh each Monday and archived per week; week-over-week trends and cumulative totals live on the <strong>Life of Experiment</strong> report. (The underlying data pull spans 2026-04-06 to 2026-06-01 so the degradation signals -- approval-rate slope and the two-consecutive-week rule -- can be computed week-over-week; only the current week is shown here.)</div>
+<h2 id="decision-summary">Decision summary</h2>
+<p class="section-intro">One line per cohort. Detail follows in the eight steps below.</p>
+<div class="kpi-row">
+<div class="kpi-card"><div class="kpi-label">Cohort: 937700006857 (sample)</div><div class="kpi-value positive">Continue</div><div class="kpi-sub">1/12 degrading (8.3%) — pull at 50%</div></div>
+<div class="kpi-card"><div class="kpi-label">Cohort: (second arm)</div><div class="kpi-value">awaiting data</div><div class="kpi-sub">Production runs LOW and MED side-by-side in this same file</div></div>
+</div>
+<h2 id="step-1-pull-last-week-s-data-per-bin-per-cohort">Step 1 — Pull last week's data per BIN per cohort</h2>
+<p class="section-intro">Sources: A1 approval by BIN, A2 decline mix, A3 disputes, A4 velocity; plus decision_tree_perbin and decision_tree_permid.</p>
+<table>
+<thead><tr><th>Source CSV</th><th>Status</th><th class="num">Rows</th></tr></thead>
+<tbody>
+<tr><td>A1_approval_by_bin.csv</td><td>loaded</td><td class="num">15,640</td></tr>
+<tr><td>A2_decline_mix.csv</td><td>loaded</td><td class="num">21,120</td></tr>
+<tr><td>A3_disputes.csv</td><td>loaded</td><td class="num">370</td></tr>
+<tr><td>A4i_caid_bin_velocity.csv</td><td>loaded</td><td class="num">15,640</td></tr>
+<tr><td>A4ii_caid_merchant_bin_velocity.csv</td><td>loaded</td><td class="num">29,451</td></tr>
+<tr><td>decision_tree_perbin.csv</td><td>loaded</td><td class="num">12</td></tr>
+<tr><td>decision_tree_permid.csv</td><td>loaded</td><td class="num">1</td></tr>
+</tbody>
+</table>
+<div class="tbl-cap">Row counts cover the full window 2026-04-06 to 2026-06-01 (9 weeks).</div>
+
+<h2 id="step-2-3-per-bin-signal-evaluation-and-status-assignment">Step 2 &amp; 3 — Per-BIN signal evaluation and status assignment</h2>
+<p class="section-intro">For each top BIN (≥1% of cohort CIT over trailing 30d), we check four signals. Only the PRIMARY signal (approval-rate slope drop ≥1.5pp WoW) drives DEGRADING when it fires in two consecutive weekly readings. The other three (decline-mix shift, new disputes, attempt-volume rising) drive WATCH only.</p>
+<div class="table-scroll">
+<table class="table-dense table-sortable">
+<thead><tr><th>BIN6</th><th>Scheme</th><th>Issuer</th><th class="num">Share</th><th class="num">Approval (this wk)</th><th class="num">Approval (prior wk)</th><th class="num">WoW slope</th><th>Decline-mix shift</th><th>New disputes</th><th>Volume rising</th><th class="num">Auth Ct (this wk)</th><th class="num">Settled Ct (this wk)</th><th class="num">Settled $ (this wk)</th><th class="num">Disp Ct (this wk)</th><th class="num">Disp $ (this wk)</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>434256</td><td>Visa</td><td>WELLS FARGO BANK, NATION</td><td class="num">1.1%</td><td class="num">6.45%</td><td class="num">16.47%</td><td class="num"><span class="delta-negative">-10.02 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-negative">YES</span></td><td><span class="delta-zero">no</span></td><td class="num">62</td><td class="num">4</td><td class="num">$156</td><td class="num">1</td><td class="num">$50</td><td><span class="pill pill-degrading">degrading</span></td></tr>
+<tr><td>400022</td><td>Visa</td><td>NAVY FEDERAL CREDIT UNIO</td><td class="num">1.5%</td><td class="num">4.21%</td><td class="num">4.73%</td><td class="num"><span class="delta-negative">-0.52 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td class="num">95</td><td class="num">4</td><td class="num">$126</td><td class="num">0</td><td class="num">$0</td><td><span class="pill pill-healthy">healthy</span></td></tr>
+<tr><td>414740</td><td>Visa</td><td>JPMORGAN CHASE BANK N.A.</td><td class="num">1.8%</td><td class="num">6.32%</td><td class="num">6.25%</td><td class="num"><span class="delta-positive">+0.07 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td class="num">95</td><td class="num">6</td><td class="num">$251</td><td class="num">0</td><td class="num">$0</td><td><span class="pill pill-healthy">healthy</span></td></tr>
+<tr><td>414720</td><td>Visa</td><td>JPMORGAN CHASE BANK N.A.</td><td class="num">2.8%</td><td class="num">5.88%</td><td class="num">5.61%</td><td class="num"><span class="delta-positive">+0.27 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td class="num">153</td><td class="num">9</td><td class="num">$696</td><td class="num">0</td><td class="num">$0</td><td><span class="pill pill-healthy">healthy</span></td></tr>
+<tr><td>444796</td><td>Visa</td><td>CREDIT ONE BANK, NATIONA</td><td class="num">1.6%</td><td class="num">2.27%</td><td class="num">0.70%</td><td class="num"><span class="delta-positive">+1.57 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td class="num">88</td><td class="num">2</td><td class="num">$104</td><td class="num">0</td><td class="num">$0</td><td><span class="pill pill-healthy">healthy</span></td></tr>
+<tr><td>521333</td><td>Mastercard</td><td>SYNCHRONY BANK</td><td class="num">1.2%</td><td class="num">16.67%</td><td class="num">11.97%</td><td class="num"><span class="delta-positive">+4.70 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td class="num">60</td><td class="num">10</td><td class="num">$303</td><td class="num">0</td><td class="num">$0</td><td><span class="pill pill-healthy">healthy</span></td></tr>
+<tr><td>533248</td><td>Mastercard</td><td>COMERICA BANK</td><td class="num">1.9%</td><td class="num">15.22%</td><td class="num">3.45%</td><td class="num"><span class="delta-positive">+11.77 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td class="num">138</td><td class="num">21</td><td class="num">$985</td><td class="num">0</td><td class="num">$0</td><td><span class="pill pill-healthy">healthy</span></td></tr>
+<tr><td>426684</td><td>Visa</td><td>JPMORGAN CHASE BANK N.A.</td><td class="num">2.3%</td><td class="num">1.98%</td><td class="num">6.63%</td><td class="num"><span class="delta-negative">-4.65 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td class="num">101</td><td class="num">2</td><td class="num">$57</td><td class="num">0</td><td class="num">$0</td><td><span class="pill pill-watch">watch</span></td></tr>
+<tr><td>447227</td><td>Visa</td><td>STRIDE BANK, NATIONAL AS</td><td class="num">1.4%</td><td class="num">0.00%</td><td class="num">2.73%</td><td class="num"><span class="delta-negative">-2.73 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-zero">no</span></td><td class="num">83</td><td class="num">0</td><td class="num">$0</td><td class="num">0</td><td class="num">$0</td><td><span class="pill pill-watch">watch</span></td></tr>
+<tr><td>403163</td><td>Visa</td><td>SUTTON BANK</td><td class="num">4.1%</td><td class="num">8.00%</td><td class="num">4.68%</td><td class="num"><span class="delta-positive">+3.32 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-negative">YES</span></td><td><span class="delta-zero">no</span></td><td class="num">225</td><td class="num">18</td><td class="num">$566</td><td class="num">1</td><td class="num">$47</td><td><span class="pill pill-watch">watch</span></td></tr>
+<tr><td>440066</td><td>Visa</td><td>BANK OF AMERICA - CONSUM</td><td class="num">1.3%</td><td class="num">16.42%</td><td class="num">12.50%</td><td class="num"><span class="delta-positive">+3.92 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-negative">YES</span></td><td><span class="delta-zero">no</span></td><td class="num">67</td><td class="num">11</td><td class="num">$423</td><td class="num">1</td><td class="num">$75</td><td><span class="pill pill-watch">watch</span></td></tr>
+<tr><td>473702</td><td>Visa</td><td>WELLS FARGO BANK, NATION</td><td class="num">1.1%</td><td class="num">11.54%</td><td class="num">7.00%</td><td class="num"><span class="delta-positive">+4.54 pp</span></td><td><span class="delta-zero">no</span></td><td><span class="delta-negative">YES</span></td><td><span class="delta-zero">no</span></td><td class="num">52</td><td class="num">6</td><td class="num">$215</td><td class="num">1</td><td class="num">$39</td><td><span class="pill pill-watch">watch</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="tbl-cap">Approval columns are per-week (this vs prior week); the Auth / Settled / Disp count and $ columns (marked "this wk") are for the current report week (Jun 1-7). Full data window: 2026-04-06 to 2026-06-01 (9 weeks).</div>
+
+<h2 id="step-4-count-top-bins-in-degrading-state">Step 4 — Count top BINs in DEGRADING state</h2>
+<div class="headline-card"><strong>1</strong> of <strong>12</strong> top BINs are flagged DEGRADING (8.3%).</div>
+<h2 id="step-5-apply-the-pull-rule-50-threshold">Step 5 — Apply the pull rule (50% threshold)</h2>
+<div class="headline-card"><span class="pill pill-continue">CONTINUE</span> &nbsp; 8.3% of top BINs are DEGRADING. Threshold is 50% — <strong>NOT reached — CONTINUE the MID in rotation</strong>.</div>
+<h2 id="step-6-ramp-stability-check-pre-stability-only">Step 6 — Ramp-stability check (pre-stability only)</h2>
+<p>The ramp-stability trigger fires when the MID's 7-day rolling approval rate has held steady (WoW absolute change ≤1.5pp) for two consecutive weekly readings (per Section 4.3). Before that trigger fires, the weekly run is treated as a warmup observation and pull decisions are paused. The current sample CAID is well past its ramp window (the input CSVs cover 9 weeks of activity), so this check is not gating the pull decision above.</p>
+<h2 id="step-7-reintroduction-rule-only-applies-to-a-cooled-mid">Step 7 — Reintroduction rule (only applies to a cooled MID)</h2>
+<p>If the MID is currently in cooldown, re-run steps 1–4 against the most recent 7 days of post-rest activity. &lt;50% DEGRADING → reintroduce at 50/50 split; ≥50% still DEGRADING → pull again, extend rest by 15 days, retry. Not applicable to the sample CAID — no pull/cooldown has occurred in the window.</p>
+<h2 id="step-8-control-comparison-interpretive-not-a-separate-trigger">Step 8 — Control comparison (interpretive, not a separate trigger)</h2>
+<p>Re-run steps 1–4 against the CONTROL arm of the cohort — the 50% of in-scope CIT 1st-attempt traffic routed through the merchant's default cascade. Three readings:</p>
+<ul><li>BOTH arms degrade together → cause is upstream of the experiment (merchant-level or issuer-portfolio-wide). Pull may still fire on the experiment side, but the report should note the upstream cause.</li><li>ONLY the experiment side degrades → the new-MID hypothesis is directly supported. This is the strongest evidence the experiment can produce.</li><li>ONLY the control side degrades → unusual; investigate the cascade.</li></ul>
+<div class="note"><strong>Sample limitation.</strong> The sample report is generated from a single live CAID (937700006857) where no experiment routing is active, so only one arm of data exists. In production, mid_weekly_monitor.py will split the A1–A4 CSVs by <code>experiment_arm</code> tag and steps 1–4 will be repeated against the CONTROL arm, with the two arms compared in line. The single-arm result above is shown as structure for now.</div>
+<div class="footer">
+<div>Generated 2026-06-05 by <strong>MIDical Lab</strong> · FlexFactor</div>
+<div>Source: Appendix B.1 of the experiment plan</div>
+</div>
+</div>
+</div>
+<script>
+(function(){
+  // ---- Sortable tables: click any column header to sort by that column.
+  function parseSortValue(text){
+    if(text == null) return null;
+    var t = String(text).trim();
+    if(t === '' || t === '-' || t === '—') return null;
+    // Strip common formatting: %, pp, $, commas, plus signs, parentheses
+    var clean = t.replace(/[,$%]/g, '').replace(/\+/g, '').replace(/\spp$/, '').trim();
+    var n = parseFloat(clean);
+    if(!isNaN(n)) return n;
+    return t.toLowerCase();
+  }
+  function sortTable(table, colIdx, dir){
+    var tbody = table.tBodies[0];
+    if(!tbody) return;
+    var rows = Array.prototype.slice.call(tbody.rows);
+    rows.sort(function(a, b){
+      var ca = a.cells[colIdx], cb = b.cells[colIdx];
+      var av = parseSortValue(ca ? ca.innerText : '');
+      var bv = parseSortValue(cb ? cb.innerText : '');
+      if(av === null && bv === null) return 0;
+      if(av === null) return 1;   // nulls sort to end
+      if(bv === null) return -1;
+      if(typeof av === 'number' && typeof bv === 'number'){
+        return dir === 'asc' ? av - bv : bv - av;
+      }
+      return dir === 'asc'
+        ? String(av).localeCompare(String(bv))
+        : String(bv).localeCompare(String(av));
+    });
+    rows.forEach(function(r){ tbody.appendChild(r); });
+  }
+  document.querySelectorAll('table.table-sortable thead th').forEach(function(th){
+    th.addEventListener('click', function(){
+      var table = th.closest('table');
+      var idx = Array.prototype.indexOf.call(th.parentNode.children, th);
+      var isAsc = th.classList.contains('sorted-asc');
+      table.querySelectorAll('thead th').forEach(function(x){
+        x.classList.remove('sorted-asc', 'sorted-desc');
+      });
+      var dir = isAsc ? 'desc' : 'asc';
+      th.classList.add('sorted-' + dir);
+      sortTable(table, idx, dir);
+    });
+  });
+
+  // ---- TOC active-section highlighting via IntersectionObserver
+  var tocLinks = document.querySelectorAll('.topbar-nav a');
+  if(tocLinks.length && 'IntersectionObserver' in window){
+    var sectionMap = {};
+    tocLinks.forEach(function(a){
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if(el) sectionMap[id] = a;
+    });
+    var visible = {};
+    function highlight(){
+      var current = null;
+      // Pick the section closest to top of viewport that's at least partially visible
+      Object.keys(visible).forEach(function(id){
+        if(visible[id] && (!current || visible[id].top < visible[current].top)){
+          current = id;
+        }
+      });
+      tocLinks.forEach(function(a){ a.classList.remove('toc-active'); });
+      if(current && sectionMap[current]){
+        sectionMap[current].classList.add('toc-active');
+      }
+    }
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          visible[e.target.id] = e.boundingClientRect;
+        } else {
+          delete visible[e.target.id];
+        }
+      });
+      highlight();
+    }, { rootMargin: '-72px 0px -60% 0px', threshold: 0 });
+    Object.keys(sectionMap).forEach(function(id){
+      obs.observe(document.getElementById(id));
+    });
+  }
+})();
+</script>
+</body>
+</html>

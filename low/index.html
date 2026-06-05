@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIDical Lab - LOW cohort</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --coral:#FF5B5B; --coral-dark:#E84545; --charcoal:#3C3C42; --charcoal-soft:#5A5A63; --bg:#F8F8F8; --card:#FFFFFF; --border:#E5E5EA; --muted:#6B7280; }
+* { box-sizing: border-box; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body { font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--charcoal); margin:0; padding:36px 18px; line-height:1.55; font-size:15px; }
+.container { max-width:780px; margin:0 auto; background:var(--card); border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.06),0 6px 24px rgba(0,0,0,0.06); overflow:hidden; }
+.brand-bar { height:6px; background:linear-gradient(90deg,var(--coral) 0%,var(--coral-dark) 100%); }
+.inner { padding:38px 44px 44px; }
+.eyebrow { font-size:11px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--coral); margin-bottom:10px; }
+h1 { font-size:30px; font-weight:700; margin:0 0 12px; letter-spacing:-0.02em; line-height:1.2; }
+.lede { font-size:16px; color:var(--charcoal-soft); margin:0 0 28px; }
+h2 { font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--charcoal-soft); margin:32px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+.report-list { list-style:none; padding:0; margin:0; }
+.report-list li { margin:0 0 14px; }
+.report-card { display:block; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px 22px; text-decoration:none; color:var(--charcoal); transition:border-color 0.15s ease,transform 0.15s ease,box-shadow 0.15s ease; }
+.report-card:hover { border-color:var(--coral); transform:translateY(-1px); box-shadow:0 4px 12px rgba(255,91,91,0.12); }
+.report-card h3 { margin:0 0 6px; font-size:17px; font-weight:600; color:var(--charcoal); }
+.report-card p { margin:0; font-size:13.5px; color:var(--muted); }
+.report-card .arrow { float:right; font-size:20px; color:var(--coral); font-weight:600; }
+.arch-list { list-style:none; padding:0; margin:0; }
+.arch-row { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; padding:11px 16px; border:1px solid var(--border); border-radius:8px; margin-bottom:8px; background:var(--card); }
+.arch-wk { font-weight:600; min-width:170px; }
+.arch-gen { color:var(--muted); font-size:12.5px; }
+.arch-links { margin-left:auto; }
+.arch-links a { color:var(--coral); text-decoration:none; font-weight:600; margin-left:16px; font-size:13.5px; }
+.arch-links a:hover { text-decoration:underline; }
+.tag { display:inline-block; background:var(--coral); color:#fff; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:2px 7px; border-radius:10px; margin-left:8px; vertical-align:middle; }
+.meta-block { background:var(--bg); border-left:3px solid var(--coral); padding:14px 18px; border-radius:0 6px 6px 0; font-size:13.5px; color:var(--charcoal-soft); margin-top:28px; }
+.meta-block strong { color:var(--charcoal); }
+footer { margin-top:36px; padding-top:16px; border-top:1px solid var(--border); font-size:12px; color:var(--muted); text-align:center; }
+@media (max-width:600px){ body{padding:16px 8px;} .inner{padding:24px 20px;} h1{font-size:24px;} .arch-links{margin-left:0;} }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="brand-bar"></div>
+  <div class="inner">
+    <div class="eyebrow">FlexFactor &middot; Payments &amp; Risk</div>
+    <h1>MIDical Lab - LOW cohort</h1>
+    <p class="lede">Live reports from the MIDical Lab experiment. The weekly report and decision-tree walkthrough are published fresh every Monday (each week's snapshot archived below); the Life of Experiment report is the single cumulative view where all the week-over-week trends live.</p>
+
+    <h2>Latest</h2>
+    <ul class="report-list">
+      <li><a class="report-card" href="weekly.html"><span class="arrow">&#8594;</span><h3>Weekly Report</h3><p>This week's headline KPIs, per-scheme approval trend, decline-mix, per-BIN status, dispute signals, auth-velocity, control-arm comparison, and the pull / continue decision.</p></a></li>
+      <li><a class="report-card" href="life-of-experiment.html"><span class="arrow">&#8594;</span><h3>Life of Experiment</h3><p>Single cumulative report spanning the whole experiment to date: approval trend by scheme with peak / trough, degraded-BIN trajectories, dispute arrivals, decline-mix, baseline drift, cooldown observations -- this is where all the week-over-week trends live.</p></a></li>
+      <li><a class="report-card" href="walkthrough.html"><span class="arrow">&#8594;</span><h3>Decision-Tree Walkthrough</h3><p>Steps through Appendix B.1 with this week's data answered at each step &mdash; sources, per-BIN signal evaluation, status assignment, pull-rule outcome.</p></a></li>
+    </ul>
+
+    <h2>Prior weeks</h2>
+    <ul class="arch-list">
+<li class="arch-row"><span class="arch-wk">Week of Jun 1-7 <span class="tag">latest</span></span><span class="arch-gen">generated 2026-06-05</span><span class="arch-links"><a href="weekly/2026-06-05.html">Weekly &#8594;</a> <a href="walkthrough/2026-06-05.html">Walkthrough &#8594;</a></span></li>
+    </ul>
+
+    <div class="meta-block"><strong>About these reports.</strong> Generated against active CAID 937700006246 from the FlexFactor portfolio as a structural reference. In production the same scripts point at the two experiment MIDs (LOW 937700011015 / MED 937700011639); the weekly + walkthrough are archived here each Monday so any prior week stays one click away, and the Life of Experiment report accumulates across the full experiment.</div>
+
+    <footer>MIDical Lab &middot; FlexFactor &middot; Two-cohort risk-stratified MID experiment</footer>
+  </div>
+</div>
+</body>
+</html>
