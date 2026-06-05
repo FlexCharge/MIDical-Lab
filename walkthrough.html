@@ -431,7 +431,7 @@ table.table-sortable thead th::after { right: 5px; }
   <div class="topbar-inner">
     <div class="topbar-left">
       <span class="topbar-title">Decision-Tree Walkthrough</span>
-      <span class="topbar-meta"><span>CAID <code>937700006246</code></span><span>· 2026-06-04</span></span>
+      <span class="topbar-meta"><span>CAID <code>937700006246</code></span><span>· 2026-06-05</span></span>
     </div>
     <div class="topbar-right">
       <nav class="topbar-nav"><a href="#decision-summary">Summary</a><a href="#step-1-pull-last-week-s-data-per-bin-per-cohort">Step 1</a><a href="#step-2-amp-3-per-bin-signal-evaluation-and-status-assignment">Steps 2-3</a><a href="#step-4-count-top-bins-in-degrading-state">Step 4</a><a href="#step-5-apply-the-pull-rule-50-threshold">Step 5</a><a href="#step-6-ramp-stability-check-pre-stability-only">Step 6</a><a href="#step-7-reintroduction-rule-only-applies-to-a-cooled-mid">Step 7</a><a href="#step-8-control-comparison-interpretive-not-a-separate-trigger">Step 8</a></nav>
@@ -444,9 +444,9 @@ table.table-sortable thead th::after { right: 5px; }
 <div class="report-header">
 <div class="eyebrow">Weekly decision-tree walkthrough</div>
 <h1>MIDical Lab — Decision-Tree Walkthrough</h1>
-<div class="meta"><div class="meta-item"><span class="label">CAIDs:</span><code>937700006246 (sample — one cohort)</code></div><div class="meta-item"><span class="label">Run date:</span>2026-06-04</div><div class="meta-item"><span class="label">Source CSVs:</span><code>MIDical Lab/output/2026-06-04/</code></div></div>
+<div class="meta"><div class="meta-item"><span class="label">CAIDs:</span><code>937700006246 (sample — one cohort)</code></div><div class="meta-item"><span class="label">Run date:</span>2026-06-05</div><div class="meta-item"><span class="label">Source CSVs:</span><code>MIDical Lab/output/2026-06-04/</code></div></div>
 </div>
-<div class="note"><strong>Date window.</strong> Full data window: <strong>2026-04-06 to 2026-06-01</strong> (9 weeks). Week labels are shown as date ranges (e.g. "May 11-17"). Reading convention: count and $ columns marked <strong>"(this wk)"</strong> are for the current report week (<strong>Jun 1-7</strong>); columns marked <strong>"(to date)"</strong> (monthly report) are cumulative over the experiment to date; approval rate is broken out by scheme (Total / Visa / Mastercard). Every table also carries its own caption.</div>
+<div class="note"><strong>Date window.</strong> Full data window: <strong>2026-04-06 to 2026-06-01</strong> (9 weeks). Week labels are shown as date ranges (e.g. "May 11-17"). Reading convention: count and $ columns marked <strong>"(this wk)"</strong> are for the current report week (<strong>Jun 1-7</strong>); columns marked <strong>"(to date)"</strong> (Life-of-Experiment report) are cumulative over the experiment to date; approval rate is broken out by scheme (Total / Visa / Mastercard). Every table also carries its own caption.</div>
 <h2 id="decision-summary">Decision summary</h2>
 <p class="section-intro">One line per cohort. Detail follows in the eight steps below.</p>
 <div class="kpi-row">
@@ -507,7 +507,7 @@ table.table-sortable thead th::after { right: 5px; }
 <ul><li>BOTH arms degrade together → cause is upstream of the experiment (merchant-level or issuer-portfolio-wide). Pull may still fire on the experiment side, but the report should note the upstream cause.</li><li>ONLY the experiment side degrades → the new-MID hypothesis is directly supported. This is the strongest evidence the experiment can produce.</li><li>ONLY the control side degrades → unusual; investigate the cascade.</li></ul>
 <div class="note"><strong>Sample limitation.</strong> The sample report is generated from a single live CAID (937700006246) where no experiment routing is active, so only one arm of data exists. In production, mid_weekly_monitor.py will split the A1–A4 CSVs by <code>experiment_arm</code> tag and steps 1–4 will be repeated against the CONTROL arm, with the two arms compared in line. The single-arm result above is shown as structure for now.</div>
 <div class="footer">
-<div>Generated 2026-06-04 by <strong>MIDical Lab</strong> · FlexFactor</div>
+<div>Generated 2026-06-05 by <strong>MIDical Lab</strong> · FlexFactor</div>
 <div>Source: Appendix B.1 of the experiment plan</div>
 </div>
 </div>

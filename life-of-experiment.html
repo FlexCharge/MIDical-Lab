@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MIDical Lab — Monthly Deep Dive</title>
+<title>MIDical Lab — Life of Experiment</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -430,23 +430,23 @@ table.table-sortable thead th::after { right: 5px; }
 <div class="topbar no-print">
   <div class="topbar-inner">
     <div class="topbar-left">
-      <span class="topbar-title">Monthly Deep Dive</span>
-      <span class="topbar-meta"><span>CAID <code>937700006246</code></span><span>· 2026-06-04</span></span>
+      <span class="topbar-title">Life of Experiment</span>
+      <span class="topbar-meta"><span>CAID <code>937700006246</code></span><span>· 2026-06-05</span></span>
     </div>
     <div class="topbar-right">
       <nav class="topbar-nav"><a href="#phase-transitions">Phase</a><a href="#degraded-bins-this-month">Degraded BINs</a><a href="#dispute-level-hypothesis-preliminary-read">Disputes</a><a href="#auth-velocity-hypothesis-preliminary-read">Velocity</a><a href="#decline-mix-trajectory-pattern-observed">Decline mix</a><a href="#control-arm-comparison-test-vs-control-full-window">Control arm</a><a href="#vs-baseline-appendix-a-5-month-over-month-drift">Baseline</a><a href="#recommendations-going-into-next-month">Next month</a></nav>
       <a class="topbar-history" href="https://flexcharge.github.io/MIDical-Lab/" title="Landing page -- all prior weeks">All weeks</a>
-      <a class="topbar-history" href="https://github.com/FlexCharge/MIDical-Lab/commits/main/monthly.html" target="_blank" rel="noopener" title="View commit history for this report on GitHub">← History</a>
+      <a class="topbar-history" href="https://github.com/FlexCharge/MIDical-Lab/commits/main/life-of-experiment.html" target="_blank" rel="noopener" title="View commit history for this report on GitHub">← History</a>
     </div>
   </div>
 </div>
 <div class="report-body">
 <div class="report-header">
-<div class="eyebrow">Monthly deep dive</div>
-<h1>MIDical Lab — Monthly Deep Dive</h1>
-<div class="meta"><div class="meta-item"><span class="label">CAID:</span><code>937700006246</code></div><div class="meta-item"><span class="label">Window covered:</span>last 9 weeks ending 2026-06-04</div><div class="meta-item"><span class="label">Source CSVs:</span><code>MIDical Lab/output/2026-06-04/</code></div></div>
+<div class="eyebrow">Life of experiment</div>
+<h1>MIDical Lab — Life of Experiment</h1>
+<div class="meta"><div class="meta-item"><span class="label">CAID:</span><code>937700006246</code></div><div class="meta-item"><span class="label">Window covered:</span>last 9 weeks ending 2026-06-05</div><div class="meta-item"><span class="label">Source CSVs:</span><code>MIDical Lab/output/2026-06-04/</code></div></div>
 </div>
-<div class="note"><strong>Date window.</strong> Full data window: <strong>2026-04-06 to 2026-06-01</strong> (9 weeks). Week labels are shown as date ranges (e.g. "May 11-17"). Reading convention: count and $ columns marked <strong>"(this wk)"</strong> are for the current report week (<strong>Jun 1-7</strong>); columns marked <strong>"(to date)"</strong> (monthly report) are cumulative over the experiment to date; approval rate is broken out by scheme (Total / Visa / Mastercard). Every table also carries its own caption.</div>
+<div class="note"><strong>Date window.</strong> Full data window: <strong>2026-04-06 to 2026-06-01</strong> (9 weeks). Week labels are shown as date ranges (e.g. "May 11-17"). Reading convention: count and $ columns marked <strong>"(this wk)"</strong> are for the current report week (<strong>Jun 1-7</strong>); columns marked <strong>"(to date)"</strong> (Life-of-Experiment report) are cumulative over the experiment to date; approval rate is broken out by scheme (Total / Visa / Mastercard). Every table also carries its own caption.</div>
 <p class="section-intro">This is a single <strong>cumulative</strong> deep dive covering the <strong>life of the experiment to date</strong> (not a rolling month) -- it is refreshed each month and its window grows as the experiment runs. Per-BIN count and $ columns below are cumulative "to date"; the weekly report carries the current-week view.</p>
 <h2 id="phase-transitions">Phase transitions</h2>
 <div class="kpi-row">
@@ -547,7 +547,7 @@ table.table-sortable thead th::after { right: 5px; }
 <h2 id="recommendations-going-into-next-month">Recommendations going into next month</h2>
 <ol class="recs"><li>Track the currently-DEGRADING BINs into next week. If approval rate recovers, demote to WATCH or HEALTHY; if it stays low, the pull-trigger math gets closer to firing.</li><li>Re-calibrate Section 5.3 thresholds against the experiment MID's own normal-state variance after 4 weeks of stable data. If quieter than the 9-CAID baseline, tighten 1.5pp; if noisier, loosen.</li><li>Cross-reference A.4 (i) and (ii) for any DEGRADING BIN: drill down to the merchant level to confirm whether the issuer is hitting the MID broadly (all merchants) or only one descriptor.</li><li>Refresh A.3 mid-window if any Visa_TC15 or MC_CB counts move sharply WoW — unlike approval / decline-mix (immediately observable), dispute arrivals lag underlying captures by 30-60 days.</li></ol>
 <div class="footer">
-<div>Generated 2026-06-04 by <strong>MIDical Lab</strong> · FlexFactor</div>
+<div>Generated 2026-06-05 by <strong>MIDical Lab</strong> · FlexFactor</div>
 <div>CAID 937700006246</div>
 </div>
 </div>
